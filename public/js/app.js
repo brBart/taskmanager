@@ -46,6 +46,8 @@ var vm = new Vue({
 
 			            mediaShow: [],
 
+			            procedureShow: [],
+
 			            comments: [],
 
 			            timespentShow : [],
@@ -299,13 +301,13 @@ var vm = new Vue({
 
   			},
 
-  			strip_tags : function(text, limit= 20){
+  			strip_tags : function(text, limit){
     			var rex = /(<([^>]+)>)/ig;
     			text =  text.replace(rex , "");
     			return text.substr(0, limit);
   			},
 
-  			str_limit : function(text, limit= 20){
+  			str_limit : function(text, limit){
 
   				return text.substr(0, limit);
   			},
@@ -496,7 +498,20 @@ var vm = new Vue({
 
 		},
 
-
+		ShowHideProcedure: function(task_id,procedure_id, event){
+				event.preventDefault();
+				this.procedureShow[task_id] = ((typeof this.procedureShow[task_id] === 'undefined') || (this.procedureShow[task_id] === false) ) ? true : false;
+				this.procedureShow.$set(task_id, this.procedureShow[task_id]);
+	
+				this.$http.get('/api/procedure/'+procedure_id+'/get', function(data){
+					if(data != 'error'){
+						this.$set('taskProcedureTitle['+task_id+']', data.title);
+						this.$set('taskProcedureDescription['+task_id+']', data.description);
+					}else{
+						alert('error!')
+					}
+				});
+		},
 
 		ShowHideMediaComment: function(task_id , event){
 
@@ -1307,8 +1322,11 @@ var vm = new Vue({
 
 Vue.filter('to_int', function (value) {
   return (value == '' || (typeof value === 'undefined')) ? 0 : value;
-})
+});
 
+Vue.filter('remove_path', function(path){
+	return path.replace( '/assets/apps/img/photos/','');
+});
 
 Vue.filter('format_datetime', function (value) {
 

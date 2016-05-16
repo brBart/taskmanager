@@ -1,0 +1,1 @@
+{"version":3,"sources":["components/Tasks.sass"],"names":[],"mappings":"AAEA;EACC,YAAY,EAAG","file":"app.css","sourcesContent":["\n\n.Alert--Success {\n\tpaddig: 0px; }\n"],"sourceRoot":"/source/"}

@@ -9,23 +9,15 @@
 
 'sudo npm install express ioredis socket.io --save'
 
-
 5. Then create /etc/init/taskmanager.conf with the following script
-
 
 ####################################################################################################
 
 description "taskmanager nodejs app server"
 author      "Marlon Dizon"
 
-# used to be: start on startup
-# until we found some mounts weren't ready yet while booting
-
 start on started mountall
 stop on shutdown
-
-# automatically respawn
-
 respawn
 respawn limit 99 5
 
@@ -43,15 +35,9 @@ post-start script
    
 end script
 
-
 ####################################################################################################
 
-
-
-
-
 6. Then create /etc/init/redis-server.conf with the following script:
-
 
 ####################################################################################################
 

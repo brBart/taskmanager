@@ -18,7 +18,6 @@ var Redis = require('ioredis');
 var redis = new Redis();
 
 redis.subscribe('comment-channel', function(err, count) {
-	
 });
 
 redis.subscribe('task-channel', function(err, count) {

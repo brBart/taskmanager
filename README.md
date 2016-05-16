@@ -12,7 +12,7 @@
 5. Then create /etc/init/taskmanager.conf with the following script
 
 ####################################################################################################
-
+'''
 description "taskmanager nodejs app server"
 author      "Marlon Dizon"
 
@@ -29,12 +29,9 @@ script
 end script
 
 post-start script
-   
-   # optionally put a script here that will notifiy you node has (re)started
-   # /root/bin/hoptoad.sh "node.js has started!"
-   
+ 
 end script
-
+'''
 ####################################################################################################
 
 6. Then create /etc/init/redis-server.conf with the following script:

@@ -1165,7 +1165,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 photo : '{!! Auth::user()->get_photo() !!}',
                                                 is_admin : '{!! Auth::user()->is_admin() !!}',
                                                 is_developer : '{!! Auth::user()->is_developer() !!}',
-                                                is_developer : '{!! Auth::user()->is_client() !!}',
+                                                is_client : '{!! Auth::user()->is_client() !!}',
                                              }
                                 @else 
                                     authUser :{

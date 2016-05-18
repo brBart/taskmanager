@@ -1828,6 +1828,7 @@ class PagesController extends Controller
                             ->with('media_relation')
                             ->with('timespent_relation')
                             ->with('timespent_total_time')
+                            ->with('get_working_user')
                             ->orderby('ordering','asc')
                             ->get();
         }
@@ -1857,6 +1858,7 @@ class PagesController extends Controller
                             ->with('media_relation')
                             ->with('timespent_relation')
                             ->with('timespent_total_time')
+                            ->with('get_working_user')
                             ->orderby('ordering','asc')
                             ->orWhere('created_by_user_id', '=', $this->auth_user['id'])
                             ->whereIn('status_id' , \Config::get('constants.task_status.client'))
@@ -2389,7 +2391,6 @@ class PagesController extends Controller
                          ->get(['project_id'])
                          ->toArray();
 
-
             $tasks = Task::with('comments_relation')
                             ->with('media_relation')
                             ->orderby('ordering','asc')
@@ -2399,14 +2400,16 @@ class PagesController extends Controller
                             ->get(['id'])
                             ->toArray();
 
-            $time_running =TimeSpent::whereIn('task_id' , $tasks)
+            $time_running =TimeSpent::with('user')
+                                    ->whereIn('task_id' , $tasks)
                                     ->whereNull('end_datetime')->get();
            
         }
         else if(Auth::user()->is_admin())
         {
 
-            $time_running =TimeSpent::whereNull('end_datetime')->get();
+            $time_running =TimeSpent::with('user')
+                                    ->whereNull('end_datetime')->get();
         }
 
         if($time_running)

@@ -380,7 +380,7 @@ var vm = new Vue({
 
 		QueryTimespent: function(){
 
-			if(this.queryTimeSpent.startDate === ''){
+			if(this.queryTimeSpent.startDate == ''){
 				alert('Please select start date!'+ this.queryTimeSpent.startDate);
 				return;
 			}
@@ -952,20 +952,31 @@ var vm = new Vue({
 		FetchAuthUserCurrentTask: function(){
 			this.$http.get('/api/auth/current/task/get', function(data){
 
+				if(this.authUser.is_developer){
+					if(data != 0 && false ){			
+						var task_id = data['task_id'];
+						this.currentTaskId = data['task_id'];
+						var ts = data['start_datetime'];
+						$('#timer-icon-'+task_id).css('color', 'green');
+						this.openTask = true;					
+						$('#timer-'+task_id).countup({
+							start : parseDate(ts)
+						});
+						this.taskTimeSet.$set(task_id ,data['id']);
+						this.isTaskStarted.$set(task_id, true);					
+					}
+				}else{
 
-				if(data != 0)
-				{			
-					var task_id = data['task_id'];
-					this.currentTaskId = data['task_id'];
-					var ts = data['start_datetime'];
-					$('#timer-icon-'+task_id).css('color', 'green');
-					this.openTask = true;					
-					$('#timer-'+task_id).countup({
-						start : parseDate(ts)
+				    $.each(data, function(i, obj) {
+				    	var task_id = obj['task_id'];
+						this.currentTaskId = obj['task_id'];
+						var ts = obj['start_datetime'];
+						$('#timer-icon-'+task_id).css('color', 'green');
+						$('#timer-'+task_id).countup({
+							start : parseDate(ts)
+						});
 					});
-					this.taskTimeSet.$set(task_id ,data['id']);
-					this.isTaskStarted.$set(task_id, true);
-				
+
 				}
 
 			});

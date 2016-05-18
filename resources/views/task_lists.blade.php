@@ -171,7 +171,7 @@ table.mceLayout {width:100% !important;}
 	 	Show Alll
 	 </div>	
 
-	 <div v-for="(key , value) in statuses" class="desk-1-12 clickable tm-project-status-@{{value}}" v-on:click="FilterTask(value)">
+	 <div v-for="(key , value) in statuses" class="desk-1-12 clickable tm-project-status-header-@{{value}}" v-on:click="FilterTask(value)">
 	 	<div class="desk-12-12"> @{{ key }} </div> 
 	 	<div class="desk-12-12"> @{{ status_description[value] }} </div>
 	 </div>					
@@ -319,7 +319,7 @@ table.mceLayout {width:100% !important;}
 
 					 <div class="tm-time-record-container desk-1-12 pad-r-10px">   
 						  <div class="tm-clock desk-5-12 align-center">
-						  	<i v-if="task.timespent_relation[0].count >= 0 " style="color:green"  v-on:click="StartEndTaskTime(task.id , $event)" id="timer-icon-@{{ task.id }}" class="fa fa-clock-o tm-task-icon timer-start-end font-36px line-36px" ></i>
+						  	<i v-if="task.get_working_user[0].count >= 0 " style="color:green"  v-on:click="StartEndTaskTime(task.id , $event)" id="timer-icon-@{{ task.id }}" class="fa fa-clock-o tm-task-icon timer-start-end font-36px line-36px" ></i>
 
 						  	<i v-else v-on:click="StartEndTaskTime(task.id , $event)" id="timer-icon-@{{ task.id }}" class="fa fa-clock-o tm-task-icon timer-start-end font-36px line-36px" ></i>
 

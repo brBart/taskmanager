@@ -50,6 +50,13 @@ class Task extends Model
                      ->groupBy('task_id');
     }
 
+    public function get_working_user()
+    {
+        return  $this->hasMany('App\TimeSpent')
+                     ->selectRaw('user_id, end_datetime , count(*) as count')
+                     ->whereNull('end_datetime');
+    }
+
     public function project()
     {
         return $this->belongsTo('App\Project');

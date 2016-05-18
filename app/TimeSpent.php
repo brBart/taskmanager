@@ -15,4 +15,9 @@ class TimeSpent extends Model
     public $timestamps = true;
     protected $softDelete = true;
     protected $dates = ['deleted_at'];
+
+    public function user()
+    {
+    	return $this->belongsTo('App\User');
+    }
 }

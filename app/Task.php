@@ -57,6 +57,13 @@ class Task extends Model
                      ->whereNull('end_datetime');
     }
 
+
+    public function assigned_user()
+    {
+        return $this->belongsTo('App\User', 'assign_user_id');
+    }
+
+
     public function project()
     {
         return $this->belongsTo('App\Project');

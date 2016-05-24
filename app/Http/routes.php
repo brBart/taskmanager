@@ -261,6 +261,8 @@ Route::group(['middleware' => 'web'], function () {
 	
 	Route::get('/testmail' , 'PagesController@task_status_email_notification');
 
+	Route::get('/api/sort/task/get' ,'PagesController@api_sort_task_get');
+
 	/*************************api*******************************************/
 });
 /*

@@ -75,4 +75,10 @@ class User extends Authenticatable
         else
             return '';
     }
+
+
+    public function tasks()
+    {
+        return $this->hasMany('App\Task');
+    }
 }

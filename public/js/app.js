@@ -1,7 +1,7 @@
 
 var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-var socket = io(host+':3000');
+var socket = io('http://tm.cloudology.codes:3000');
 var loadingImg = '<img width="45" src="/assets/apps/img/tm-saving.gif">';
 Vue.config.debug = true;
 /*
@@ -122,36 +122,21 @@ var vm = new Vue({
 
 	        			offset : [],
 
-	        			sortReportBy : 'user', 
-
 	        			currentMedia :{
 		        						photo : '',
 		        						filesize : '',
 		        						created_at : '',					        			
 	        			},
 
-	        			projectFormat : false,
-	        			
-	        			userFormat : true,
-	        			
-	        			dateFormat : false,
+	        			hideRepeatedProjectTitle : false,
 
-	        			status_description : ['this is draft',
-											  'this is estimate',
-											  'this is approval',
-											  'this is develop',
-											  'this is more info',
-											  'this is complete',
-											  'this is archived'],		
+	        			hideRepeatedUserTitle : false,
 
-						queryTimeSpent :{
-									startDate : '',
-									endDate : '',
-									companyId : '0',
-						},
+	        			showHideNotification : false,
 
-						timeSpentReport : {},	
+	        			tmpId : [],
 
+	        			opennedCommentArea : [],
 		        	}
 
 	},
@@ -180,102 +165,6 @@ var vm = new Vue({
 
     filters : {
 
-    		filter_test: function(value){
-    			//alert(value);
-    			return value;
-    		},
-
-    		fomat_datetime: function(date) {
-
-    			alert(date);
-
-    			var utc = false;
-
-    			var format = "d MMM yyyy, h:mm tt";
-
-			    var MMMM = ["\x00", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-			    var MMM = ["\x01", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-			    var dddd = ["\x02", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-			    var ddd = ["\x03", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-			    function ii(i, len) {
-			        var s = i + "";
-			        len = len || 2;
-			        while (s.length < len) s = "0" + s;
-			        return s;
-			    }
-
-			    var y = utc ? date.getUTCFullYear() : date.getFullYear();
-			    format = format.replace(/(^|[^\\])yyyy+/g, "$1" + y);
-			    format = format.replace(/(^|[^\\])yy/g, "$1" + y.toString().substr(2, 2));
-			    format = format.replace(/(^|[^\\])y/g, "$1" + y);
-
-			    var M = (utc ? date.getUTCMonth() : date.getMonth()) + 1;
-			    format = format.replace(/(^|[^\\])MMMM+/g, "$1" + MMMM[0]);
-			    format = format.replace(/(^|[^\\])MMM/g, "$1" + MMM[0]);
-			    format = format.replace(/(^|[^\\])MM/g, "$1" + ii(M));
-			    format = format.replace(/(^|[^\\])M/g, "$1" + M);
-
-			    var d = utc ? date.getUTCDate() : date.getDate();
-			    format = format.replace(/(^|[^\\])dddd+/g, "$1" + dddd[0]);
-			    format = format.replace(/(^|[^\\])ddd/g, "$1" + ddd[0]);
-			    format = format.replace(/(^|[^\\])dd/g, "$1" + ii(d));
-			    format = format.replace(/(^|[^\\])d/g, "$1" + d);
-
-			    var H = utc ? date.getUTCHours() : date.getHours();
-			    format = format.replace(/(^|[^\\])HH+/g, "$1" + ii(H));
-			    format = format.replace(/(^|[^\\])H/g, "$1" + H);
-
-			    var h = H > 12 ? H - 12 : H == 0 ? 12 : H;
-			    format = format.replace(/(^|[^\\])hh+/g, "$1" + ii(h));
-			    format = format.replace(/(^|[^\\])h/g, "$1" + h);
-
-			    var m = utc ? date.getUTCMinutes() : date.getMinutes();
-			    format = format.replace(/(^|[^\\])mm+/g, "$1" + ii(m));
-			    format = format.replace(/(^|[^\\])m/g, "$1" + m);
-
-			    var s = utc ? date.getUTCSeconds() : date.getSeconds();
-			    format = format.replace(/(^|[^\\])ss+/g, "$1" + ii(s));
-			    format = format.replace(/(^|[^\\])s/g, "$1" + s);
-
-			    var f = utc ? date.getUTCMilliseconds() : date.getMilliseconds();
-			    format = format.replace(/(^|[^\\])fff+/g, "$1" + ii(f, 3));
-			    f = Math.round(f / 10);
-			    format = format.replace(/(^|[^\\])ff/g, "$1" + ii(f));
-			    f = Math.round(f / 10);
-			    format = format.replace(/(^|[^\\])f/g, "$1" + f);
-
-			    var T = H < 12 ? "AM" : "PM";
-			    format = format.replace(/(^|[^\\])TT+/g, "$1" + T);
-			    format = format.replace(/(^|[^\\])T/g, "$1" + T.charAt(0));
-
-			    var t = T.toLowerCase();
-			    format = format.replace(/(^|[^\\])tt+/g, "$1" + t);
-			    format = format.replace(/(^|[^\\])t/g, "$1" + t.charAt(0));
-
-			    var tz = -date.getTimezoneOffset();
-			    var K = utc || !tz ? "Z" : tz > 0 ? "+" : "-";
-			    if (!utc) {
-			        tz = Math.abs(tz);
-			        var tzHrs = Math.floor(tz / 60);
-			        var tzMin = tz % 60;
-			        K += ii(tzHrs) + ":" + ii(tzMin);
-			    }
-			    format = format.replace(/(^|[^\\])K/g, "$1" + K);
-
-			    var day = (utc ? date.getUTCDay() : date.getDay()) + 1;
-			    format = format.replace(new RegExp(dddd[0], "g"), dddd[day]);
-			    format = format.replace(new RegExp(ddd[0], "g"), ddd[day]);
-
-			    format = format.replace(new RegExp(MMMM[0], "g"), MMMM[M]);
-			    format = format.replace(new RegExp(MMM[0], "g"), MMM[M]);
-
-			    format = format.replace(/\\(.)/g, "$1");
-
-			    return format;
-			},
-
-
     		format_media_links : function(value){
     			if (/(jpg|gif|png|JPG|GIF|PNG|JPEG|jpeg)$/.test(value)){
     				return '<img src="'+value+'" @click="showMediaModal = true,ShowMediaInModal(value)" class="widget-news-left-elem clickable">';                        
@@ -286,6 +175,7 @@ var vm = new Vue({
 
     		managing_users: function(value){
     			if((typeof value !== 'undefined') || (value > 0) ){
+    			    console.log('vakue-->'+value);
     			    ret = '';
 
     			    for(i = 0 ; i < this.managingUsers.length ; i++)
@@ -355,6 +245,142 @@ var vm = new Vue({
 
 	methods :{
 
+		HideShowRepeatingProjectTitleFields : function( id ){
+			if(this.hideRepeatedProjectTitle){
+				if(id == this.tmpId){
+					this.tmpId = 0;
+					return false;
+				}else{
+					this.tmpId = id;
+					return true;
+				}
+			}else{
+				return true;
+			}
+		},
+
+		ShowHideNotificationArea : function(event){
+			
+			event.preventDefault();
+
+			if(this.showHideNotification){
+				this.showHideNotification = false;
+			}else{
+				this.showHideNotification = true;				
+			}
+		},
+
+		SortTask : function(sortyby){
+			var tmpProjectId = 0 , tmpUserId = 0 , assignedToUserIdArr = [], projectIdArr = [] , sortByDate= false;
+			this.$http.get('/api/tasks/get?sort_by='+sortyby,function(data){										
+				this.$set('tasks' , data);
+				if(sortyby === 'project'){
+					this.hideRepeatedProjectTitle = true;
+					this.hideRepeatedUserTitle = false;
+					this.sortByDate =false;
+				}else if(sortyby === 'user'){
+					this.hideRepeatedUserTitle = true;
+					this.hideRepeatedProjectTitle = false;
+					this.sortByDate =false;
+				}else if(sortyby === 'date'){
+					this.hideRepeatedUserTitle = false;
+					this.hideRepeatedProjectTitle = false;
+					sortByDate = true;
+					this.FetchAuthUserCurrentTask();
+
+				}
+
+				tinymce.init({
+				    selector: ".tm-comment-area",	
+				    theme : "advanced",
+				    theme_advanced_buttons1 : "bold,italic,bullist,numlist,link,unlink,charmap,formatselect ",
+				    theme_advanced_toolbar_location : "top",
+				    theme_advanced_toolbar_align : "left",
+				  /*  setup: function(editor) {
+				        editor.on('blur', function(e) {
+				        	vm.newComment[editor.id] = tinymce.activeEditor.getContent(); 
+				        });
+				    }*/
+				});
+
+				/*this.FetchAuthUserCurrentTask();
+
+				tinymce.init({
+				    selector: "textarea",
+				    menubar: false,
+				    setup: function(editor) {
+				        editor.on('blur', function(e) {
+				        	vm.newComment[editor.id] = tinyMCE.activeEditor.getContent(); 
+				        });
+				    }
+				});*/
+
+			}).success(function(data){
+				
+				if(this.authUser.role == 'developer'){	
+					this.priorityTaskId = data[0].id;
+				}else if(this.authUser.role == 'admin'){
+					if(this.hideRepeatedProjectTitle){
+						$.each(data, function(i, obj) {
+				    		var project_id = obj['project_id'];
+				    		var task_id = obj['id'];
+				    		if($.inArray(project_id, projectIdArr)>=0){
+				    			$('.tm-project-drag-'+project_id+'-'+task_id).css('visibility' , 'hidden');
+				    		}else{
+				    			projectIdArr.push(project_id);
+				    			$('.tm-project-drag-'+project_id+'-'+task_id).css('visibility' , 'visible');
+				    		}
+				    		$('.tm-select-project').prop('disabled', true);
+				    	});
+				    	$('.tm-assign-container').css('display','block');
+				    	$('.tm-drag-and-drop').css('visibility','hidden');
+
+				    	$('.sort-by-user').removeClass("sort-by-selected");
+				    	$('.sort-by-project').addClass("sort-by-selected");
+				    	$('.sort-by-date').removeClass("sort-by-selected");
+
+				    	$('.tm-project-details').css('display' ,'none');
+					}else if(this.hideRepeatedUserTitle){
+
+
+						$.each(data, function(i, obj) {
+							var assignedToUserId =  obj['assign_user_id'];
+							var taskId = obj['id'];
+							
+							if($.inArray(assignedToUserId, assignedToUserIdArr)>=0){
+				    			$('.tm-assign-container-sorted-'+taskId+'-'+assignedToUserId).css('display' , 'none');
+				    		}else{
+				    			assignedToUserIdArr.push(assignedToUserId);
+				    			$('.tm-assign-container-sorted-'+taskId+'-'+assignedToUserId).css('display' , 'block');
+				    		}
+				    	});
+
+						$('.tm-assign-container').css('display','none');
+						$('.tm-select-assigned-user ').prop('disabled' , true);			    	
+			    		$('.tm-project-drag').css('visibility' , 'visible');
+			    		$('.tm-select-project').prop('disabled', false);
+			    		$('.tm-drag-and-drop').css('display', 'none');
+
+			    		$('.tm-project-container').removeClass("desk-10-12").addClass("desk-4-12");
+			    		$('.tm-project-container').css('float', 'right');
+
+			    		$('.sort-by-date').removeClass("sort-by-selected");
+			    		$('.sort-by-user').addClass("sort-by-selected");
+				    	$('.sort-by-project').removeClass("sort-by-selected");
+
+				    	$('.tm-project-details').css('display' ,'block');
+					}else if(sortByDate){
+						$('.sort-by-user').removeClass("sort-by-selected");
+				    	$('.sort-by-project').removeClass("sort-by-selected");
+				    	$('.sort-by-date').addClass("sort-by-selected");
+					}
+				}else{
+
+				}
+
+			});
+		},
+
 		SortReportBy : function(sortby){
 			this.sortReportBy = sortby;
 			this.QueryTimespent();	
@@ -415,14 +441,23 @@ var vm = new Vue({
 		    }
 		},
 
-		FilterTask:function(status_id){
+		FilterTask:function( event){
+
+			var status_id = event.target.value;
 			for (var k in this.statuses){
 			    if (this.statuses.hasOwnProperty(k)) {
-			        if(this.statuses[k] == status_id){
-			        	$('.tm-project-status-'+this.statuses[k]).css('display' , 'block');
-			        }else{
-			        	$('.tm-project-status-'+this.statuses[k]).css('display' , 'none');
-			        }
+					if(status_id == 7){
+						if()
+						$('.tm-project-status-'+this.statuses[k]).css('display' , 'block');
+						$('.tm-drag-and-drop').css('visibility', 'visible');
+					}else{	
+						$('.tm-drag-and-drop').css('visibility', 'hidden');
+				        if(this.statuses[k] == status_id){
+				        	$('.tm-project-status-'+this.statuses[k]).css('display' , 'block');
+				        }else{
+				        	$('.tm-project-status-'+this.statuses[k]).css('display' , 'none');
+				        }
+			    	}
 			    }
 			}
 		},
@@ -434,7 +469,7 @@ var vm = new Vue({
 			    }
 			}
 		},
-
+		
 		ShowMediaInModal: function(photo ,filesize , created_at ){
 			
 			this.currentMedia.photo=photo;
@@ -475,7 +510,7 @@ var vm = new Vue({
 				
 				data = {'email' : this.invite.email , 'role_id' : this.invite.role_id};
 
-				this.$http.post('/send/email', data, function(data){
+				this.$http.post('/send/email/', data, function(data){
 						
 						if(data['response'] == 'success'){
 							window.location.href ='/sent/email/success/'+this.invite.email;
@@ -488,8 +523,14 @@ var vm = new Vue({
 		    }
 		},
 
-
-
+		ShowHodeTaskDetails: function(id,event){
+			event.preventDefault();
+			if( $("#tm-more-details-container-"+id).hasClass("mob-l-hide") ){
+				$( "#tm-more-details-container-"+id).removeClass("mob-l-hide").addClass("mob-l-show");
+			}else{
+				$( "#tm-more-details-container-"+id).removeClass("mob-l-show").addClass("mob-l-hide");
+			}
+		},
 
 		FetchRoles: function(){
 			this.$http.get('/api/roles/get', function(data){
@@ -498,20 +539,7 @@ var vm = new Vue({
 
 		},
 
-		ShowHideProcedure: function(task_id,procedure_id, event){
-				event.preventDefault();
-				this.procedureShow[task_id] = ((typeof this.procedureShow[task_id] === 'undefined') || (this.procedureShow[task_id] === false) ) ? true : false;
-				this.procedureShow.$set(task_id, this.procedureShow[task_id]);
-	
-				this.$http.get('/api/procedure/'+procedure_id+'/get', function(data){
-					if(data != 'error'){
-						this.$set('taskProcedureTitle['+task_id+']', data.title);
-						this.$set('taskProcedureDescription['+task_id+']', data.description);
-					}else{
-						alert('error!')
-					}
-				});
-		},
+
 
 		ShowHideMediaComment: function(task_id , event){
 
@@ -537,6 +565,18 @@ var vm = new Vue({
 
 		},
 
+
+		RemoveItemFromArray: function (arr) {
+		    var what, a = arguments, L = a.length, ax;
+		    while (L > 1 && arr.length) {
+		        what = a[--L];
+		        while ((ax= arr.indexOf(what)) !== -1) {
+		            arr.splice(ax, 1);
+		        }
+		    }
+		    return arr;
+		},
+
 		ShowHideComments: function(task_id ,event){	
 
 			if(this.authUser['role'] == 'admin' || this.authUser['role'] == 'client'){
@@ -554,6 +594,11 @@ var vm = new Vue({
 				}
 			}
 
+			if($.inArray(task_id, this.opennedCommentArea)>=0){
+				this.opennedCommentArea  
+			}else{
+				this.opennedCommentArea.push(task_id);
+			}
 
 			if(this.commentShow[task_id] ){
 				tinymce.init({
@@ -600,7 +645,21 @@ var vm = new Vue({
 		},
 
 
+		ShowHideProcedure: function(task_id,procedure_id, event){
 
+			event.preventDefault();
+			this.procedureShow[task_id] = ((typeof this.procedureShow[task_id] === 'undefined') || (this.procedureShow[task_id] === false) ) ? true : false;
+			this.procedureShow.$set(task_id, this.procedureShow[task_id]);
+
+			this.$http.get('/api/procedure/'+procedure_id+'/get', function(data){
+				if(data != 'error'){
+					this.$set('taskProcedureTitle['+task_id+']', data.title);
+					this.$set('taskProcedureDescription['+task_id+']', data.description);
+				}else{
+					alert('error!')
+				}
+			});
+		},
 
 		ShowHideMedia: function(task_id ,event){	
 
@@ -656,16 +715,14 @@ var vm = new Vue({
 
 		FetchTasks: function(){
 				
-			this.$http.get('/api/tasks/get',function(data){										
+			this.$http.get('/api/tasks/get?sort_by=nothing',function(data){										
 				this.$set('tasks' , data);	
 			}).success(function(data){
 				if(this.authUser.role == 'developer'){	
 					this.priorityTaskId = data[0].id;
 				}
+				this.FetchAuthUserCurrentTask();
 			});
-
-		
-
 			
 		},
 
@@ -758,19 +815,9 @@ var vm = new Vue({
 			}
 		},
 
-		DeleteMedia: function(id){
-			
-			var r = confirm("Are you sure?");
-
-			if (r == true) {
-				data = {'id' : id};
-				this.$http.post('/api/media/delete', data, function(data){
-					this.FetchTasks();
-				});
-			}
-		},
-
 		ShowTimeSpent: function(task_id, timespentCount ,event){
+
+			
 
 			timespentCount = (typeof timespentCount !== 'undefined') ? timespentCount : 0;
 			if( (typeof timespentCount !== 'undefined') && (timespentCount != null ) && (timespentCount > 0 )  ){
@@ -952,8 +999,10 @@ var vm = new Vue({
 		FetchAuthUserCurrentTask: function(){
 			this.$http.get('/api/auth/current/task/get', function(data){
 
+
 				if(this.authUser.is_developer){
-					if(data != 0 && false ){			
+					
+					if(data != 0){			
 						var task_id = data['task_id'];
 						this.currentTaskId = data['task_id'];
 						var ts = data['start_datetime'];
@@ -965,17 +1014,36 @@ var vm = new Vue({
 						this.taskTimeSet.$set(task_id ,data['id']);
 						this.isTaskStarted.$set(task_id, true);					
 					}
-				}else{
 
-				    $.each(data, function(i, obj) {
+				}else{
+					 
+					 $.each(data, function(i, obj) {
 				    	var task_id = obj['task_id'];
 						this.currentTaskId = obj['task_id'];
 						var ts = obj['start_datetime'];
+						var userInfo = obj['user'];
 						$('#timer-icon-'+task_id).css('color', 'green');
 						$('#timer-'+task_id).countup({
 							start : parseDate(ts)
 						});
-					});
+
+						if( (typeof userInfo !== 'undefined') && userInfo !== null ){
+							$('.tm-current-working-user-photo-'+task_id).attr('src',userInfo.photo);
+							//$('.tm-current-working-user-name-'+task_id).html(userInfo.first_name);
+							$('.tm-user-assigned-preview-'+task_id).css('background' ,'rgb(37, 37, 43) url("http://testsite1.com/assets/apps/img/photos/preview.png") repeat scroll center center / cover;');
+							$('.tm-user-assigned-preview-'+task_id).css('display' ,'block');
+							$('#timer-icon-'+task_id).css('display', 'none');
+							$('.tm-total-time-per-task-'+task_id).css('display', 'none');
+							//$('.tm-time-records-'+task_id).css('display', 'none');
+
+						
+						}else{
+							$('.tm-total-time-per-task-'+task_id).css('display', 'block');
+							//$('.tm-time-records-'+task_id).css('display', 'block');
+							$('#timer-icon-'+task_id).css('display', 'block');
+							$('.tm-user-assigned-preview-'+task_id).css('display' ,'none');
+						}
+ 					});
 
 				}
 
@@ -984,25 +1052,25 @@ var vm = new Vue({
 
 		UploadFile: function(task_id , event){
 
-				var request = new XMLHttpRequest();
-		        var file = document.querySelector('#file-upload-'+task_id);
-		        var form_data = new FormData();
+			var request = new XMLHttpRequest();
+	        var file = document.querySelector('#file-upload-'+task_id);
+	        var form_data = new FormData();
 
-		        form_data.append('file', file.files[0]);
-		        form_data.append('task_id',task_id);
-		        request.onreadystatechange = function() {
-		            if (request.readyState == XMLHttpRequest.DONE) {
-		                var obj = jQuery.parseJSON(request.responseText);
-		                if(obj['status'] == "success"){
-		                    vm.FetchTasks();
-		                    vm.FetchMedia(task_id);
-		                }else{
+	        form_data.append('file', file.files[0]);
+	        form_data.append('task_id',task_id);
+	        request.onreadystatechange = function() {
+	            if (request.readyState == XMLHttpRequest.DONE) {
+	                var obj = jQuery.parseJSON(request.responseText);
+	                if(obj['status'] == "success"){
+	                    vm.FetchTasks();
+	                    vm.FetchMedia(task_id);
+	                }else{
 
-		                }
-		            }
-		        }
-		        request.open('post', '/api/media/post', true);
-		        request.send(form_data);
+	                }
+	            }
+	        }
+	        request.open('post', '/api/media/post', true);
+	        request.send(form_data);
 		},
 
 		ClientTaskReorder: function(serialize_tasks){
@@ -1333,7 +1401,8 @@ var vm = new Vue({
 
 Vue.filter('to_int', function (value) {
   return (value == '' || (typeof value === 'undefined')) ? 0 : value;
-});
+})
+
 
 Vue.filter('remove_path', function(path){
 	return path.replace( '/assets/apps/img/photos/','');
@@ -1439,7 +1508,6 @@ Vue.filter('extract_minutes', function (value) {
 })
 
 Vue.filter('managing_companies', function (value) {
-	alert('companies'+value);
   return vm.managingCompanies.indexOf(value) > -1 ? 'checked' : '';
 })
 
@@ -1528,4 +1596,3 @@ if(vm.authUser.role == 'admin' || vm.authUser.role == 'client'){
 
 
 //# sourceMappingURL=tasks.js.map
-

@@ -1684,6 +1684,8 @@ class PagesController extends Controller
         return response()->json($res);
     }
 
+
+
     public function client_order_slots()
     {
         $project_manage = Manager::where('user_id' , '=' , $this->auth_user['id'])
@@ -1819,18 +1821,76 @@ class PagesController extends Controller
 
     }
 
-    public function api_tasks_get()
+    public function api_tasks_get(Request $request)
     {
+        $sort_by = Input::get('sort_by'); 
+
 
         if(Auth::user()->is_admin() )
         {
-             $tasks = Task::with('comments_relation')
-                            ->with('media_relation')
-                            ->with('timespent_relation')
-                            ->with('timespent_total_time')
-                            ->with('get_working_user')
-                            ->orderby('ordering','asc')
-                            ->get();
+            if($sort_by  == 'project' )
+            {  
+                //$tasks = array();
+                $pids = array();
+                $task_project_ids = Task::groupby('project_id')
+                                        ->get(['project_id']);
+                $project_ids = Project::orderby('project_name' , 'asc')
+                                      ->whereIn('id' ,$task_project_ids)
+                                      ->get(['id'])
+                                      ->toArray();
+
+                foreach ($project_ids as $project_id){
+                    array_push($pids, $project_id['id']);
+                }
+
+                $project_ids_ordered = implode(',', $pids);                      
+                
+                $tasks = Task::with('comments_relation')
+                              ->with('media_relation')
+                              ->with('timespent_relation')
+                              ->with('timespent_total_time')
+                              ->with('get_working_user')
+                              ->orderByRaw(DB::raw("FIELD(project_id, $project_ids_ordered)"))
+                              ->get();
+
+                 
+            
+            }
+            else if($sort_by == 'user')
+            {
+                $user_group_ids = Task::groupby('assign_user_id')
+                                        ->get(['assign_user_id']);
+                $user_ids = User::orderby('first_name' , 'asc')
+                                ->whereIn('id' , $user_group_ids)
+                                ->get(['id']);
+                $uids = array();
+
+                foreach ($user_ids as $user_id){
+                    array_push($uids, $user_id['id']);
+                }
+
+                $user_ids_ordered = implode(',', $uids);  
+                $tasks = Task::with('comments_relation')
+                             ->with('assigned_user')   
+                             ->with('media_relation')
+                             ->with('timespent_relation')
+                             ->with('timespent_total_time')
+                             ->with('get_working_user')
+                             ->orderByRaw(DB::raw("FIELD(assign_user_id, $user_ids_ordered)"))
+                             ->get();
+
+            }
+            else
+            {
+                $tasks = Task::with('comments_relation')
+                                ->with('media_relation')
+                                ->with('timespent_relation')
+                                ->with('timespent_total_time')
+                                ->with('get_working_user')
+                                ->orderby('ordering','asc')
+                                ->get();
+
+            }
         }
         elseif(Auth::user()->is_developer())
         {
@@ -1869,6 +1929,7 @@ class PagesController extends Controller
         return \Response::make(json_encode($tasks, JSON_PRETTY_PRINT))
                         ->header('Content-Type', "application/json");
     }
+
 
 
     public function client_order_slot()
@@ -2742,6 +2803,80 @@ class PagesController extends Controller
         {
             return 'error';
         }
+    }
+
+
+    public function api_sort_task_get()
+    {
+        $sort_by = Input::get('sort_by');
+
+        if($sort_by == 'user')
+        {
+
+            $user_group = Task::groupby('assign_user_id')
+                              ->get();
+
+
+
+            $user_task = array();
+            $user_details = array();
+
+            foreach($user_group as $user) 
+            {
+                $tasks_per_user = Task::where('assign_user_id' , '=' , $user->assign_user_id)
+                                      ->get()
+                                      ->toArray();
+
+                                      
+                $user_name = User::find($user->assign_user_id);
+
+                array_push($user_task , 
+                           $tasks_per_user);
+
+
+                array_push($user_details, array('user'=> $user_name->first_name.' '.$user_name->last_name,
+                                                'user_task' => $user_task));                    
+            }
+
+
+            return \Response::make(json_encode($user_details, JSON_PRETTY_PRINT))
+                                   ->header('Content-Type', "application/json");  
+
+
+        }
+        else if ($sort_by == 'project') 
+        {
+
+            $project_group = Task::groupby('project_id')
+                                 ->get();
+
+            $project_task = array();
+            $project_details = array();
+
+            foreach($project_group as $project) 
+            {
+                $tasks_per_project = Task::where('project_id' , '=' , $project->project_id)
+                                      ->get()
+                                      ->toArray();
+
+                array_push($project_task , 
+                           $tasks_per_project);
+
+
+                array_push($project_details, array('project'=> $project->project->project_name,
+                                                'project_task' => $project_task));                    
+            }
+
+            return \Response::make(json_encode($project_details, JSON_PRETTY_PRINT))
+                                   ->header('Content-Type', "application/json");  
+
+        }
+        else
+        {
+
+        }
+
+        
     }
 
 }

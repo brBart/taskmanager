@@ -1,7 +1,7 @@
 
 var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-var socket = io('http://tm.cloudology.codes:3000');
+var socket = io('http://192.168.33.11:3000');
 var loadingImg = '<img width="45" src="/assets/apps/img/tm-saving.gif">';
 Vue.config.debug = true;
 /*
@@ -137,6 +137,12 @@ var vm = new Vue({
 	        			tmpId : [],
 
 	        			opennedCommentArea : [],
+
+	        			taskSortBy : 'date',
+
+	        			userNotification : {},
+
+	        			userNotificationCount : 0,
 		        	}
 
 	},
@@ -191,11 +197,6 @@ var vm = new Vue({
 
   			},
 
-  			strip_tags : function(text, limit){
-    			var rex = /(<([^>]+)>)/ig;
-    			text =  text.replace(rex , "");
-    			return text.substr(0, limit);
-  			},
 
   			str_limit : function(text, limit){
 
@@ -245,6 +246,40 @@ var vm = new Vue({
 
 	methods :{
 
+		TasksPageDisabledBtn: function(){
+
+			if(this.authUser.is_admin){
+
+			}else if(this.authUser.is_developer){
+
+				$('select.tm-select-project').prop('disabled', true);
+				$('.tm-skill-field select').prop('disabled', true);
+				$('.tm-procedure-field').prop('disabled', true);
+			}else{
+
+			}
+
+		},
+
+		FetchUserNotificationCount : function(){
+			if(typeof this.authUser.id !== 'undefined'){
+				this.$http.get('/api/user/notifications/count/get',function(data){
+					this.$set('userNotificationCount', data);
+				});
+			}
+		},
+
+		FetchUserNotifications: function(){
+
+			if(typeof this.authUser.id !== 'undefined'){
+				this.$http.get('/api/user/notifications/get',function(data){
+					this.$set('userNotification', data);
+					this.FetchUserNotificationCount();
+				});
+			}
+
+		},
+
 		HideShowRepeatingProjectTitleFields : function( id ){
 			if(this.hideRepeatedProjectTitle){
 				if(id == this.tmpId){
@@ -260,12 +295,11 @@ var vm = new Vue({
 		},
 
 		ShowHideNotificationArea : function(event){
-			
 			event.preventDefault();
-
 			if(this.showHideNotification){
 				this.showHideNotification = false;
 			}else{
+				this.FetchUserNotifications();
 				this.showHideNotification = true;				
 			}
 		},
@@ -274,6 +308,7 @@ var vm = new Vue({
 			var tmpProjectId = 0 , tmpUserId = 0 , assignedToUserIdArr = [], projectIdArr = [] , sortByDate= false;
 			this.$http.get('/api/tasks/get?sort_by='+sortyby,function(data){										
 				this.$set('tasks' , data);
+				this.taskSortBy = sortyby;
 				if(sortyby === 'project'){
 					this.hideRepeatedProjectTitle = true;
 					this.hideRepeatedUserTitle = false;
@@ -303,24 +338,14 @@ var vm = new Vue({
 				    }*/
 				});
 
-				/*this.FetchAuthUserCurrentTask();
-
-				tinymce.init({
-				    selector: "textarea",
-				    menubar: false,
-				    setup: function(editor) {
-				        editor.on('blur', function(e) {
-				        	vm.newComment[editor.id] = tinyMCE.activeEditor.getContent(); 
-				        });
-				    }
-				});*/
-
 			}).success(function(data){
 				
 				if(this.authUser.role == 'developer'){	
 					this.priorityTaskId = data[0].id;
 				}else if(this.authUser.role == 'admin'){
-					if(this.hideRepeatedProjectTitle){
+					if(sortyby === 'project'){
+				
+
 						$.each(data, function(i, obj) {
 				    		var project_id = obj['project_id'];
 				    		var task_id = obj['id'];
@@ -339,10 +364,10 @@ var vm = new Vue({
 				    	$('.sort-by-project').addClass("sort-by-selected");
 				    	$('.sort-by-date').removeClass("sort-by-selected");
 
+				    	$('.tm-project-container').removeClass('tm-filter-by-user-selected').removeClass('tm-filter-by-date-selected').addClass('tm-filter-by-project-selected');
+
 				    	$('.tm-project-details').css('display' ,'none');
-					}else if(this.hideRepeatedUserTitle){
-
-
+					}else if(sortyby === 'user'){
 						$.each(data, function(i, obj) {
 							var assignedToUserId =  obj['assign_user_id'];
 							var taskId = obj['id'];
@@ -354,6 +379,8 @@ var vm = new Vue({
 				    			$('.tm-assign-container-sorted-'+taskId+'-'+assignedToUserId).css('display' , 'block');
 				    		}
 				    	});
+
+						$('.tm-project-container').removeClass('tm-filter-by-project-selected').removeClass('tm-filter-by-date-selected').addClass('tm-filter-by-user-selected');
 
 						$('.tm-assign-container').css('display','none');
 						$('.tm-select-assigned-user ').prop('disabled' , true);			    	
@@ -369,10 +396,14 @@ var vm = new Vue({
 				    	$('.sort-by-project').removeClass("sort-by-selected");
 
 				    	$('.tm-project-details').css('display' ,'block');
-					}else if(sortByDate){
+					}else if(sortyby === 'date'){
 						$('.sort-by-user').removeClass("sort-by-selected");
 				    	$('.sort-by-project').removeClass("sort-by-selected");
 				    	$('.sort-by-date').addClass("sort-by-selected");
+				    	$('.tm-drag-and-drop').css('display', 'block');
+
+						$('.tm-project-container').removeClass('tm-filter-by-project-selected').removeClass('tm-filter-by-user-selected').addClass('tm-filter-by-date-selected');
+
 					}
 				}else{
 
@@ -442,14 +473,13 @@ var vm = new Vue({
 		},
 
 		FilterTask:function( event){
-
 			var status_id = event.target.value;
 			for (var k in this.statuses){
 			    if (this.statuses.hasOwnProperty(k)) {
 					if(status_id == 7){
-						if()
-						$('.tm-project-status-'+this.statuses[k]).css('display' , 'block');
-						$('.tm-drag-and-drop').css('visibility', 'visible');
+							$('.tm-project-status-'+this.statuses[k]).css('display' , 'block');
+
+						
 					}else{	
 						$('.tm-drag-and-drop').css('visibility', 'hidden');
 				        if(this.statuses[k] == status_id){
@@ -458,6 +488,12 @@ var vm = new Vue({
 				        	$('.tm-project-status-'+this.statuses[k]).css('display' , 'none');
 				        }
 			    	}
+
+			    	if(this.taskSortBy === 'date'){
+						$('.tm-drag-and-drop').css('visibility', 'visible');
+					}else{
+						$('.tm-drag-and-drop').css('visibility', 'hidden');
+					}
 			    }
 			}
 		},
@@ -715,14 +751,18 @@ var vm = new Vue({
 
 		FetchTasks: function(){
 				
-			this.$http.get('/api/tasks/get?sort_by=nothing',function(data){										
+			this.$http.get('/api/tasks/get',function(data){										
 				this.$set('tasks' , data);	
 			}).success(function(data){
 				if(this.authUser.role == 'developer'){	
 					this.priorityTaskId = data[0].id;
 				}
+
 				this.FetchAuthUserCurrentTask();
 			});
+
+		
+
 			
 		},
 
@@ -850,14 +890,14 @@ var vm = new Vue({
 						  	this.$http.post('/api/task/time/post', data ,function(data){
 						  		if(data['status'] === 'success' && data['mode'] === 'close'){
 				       					$('#timer-'+task_id).html('');
-				       					//this.taskTimeSet.$set(task_id ,0);
+				       					this.taskTimeSet.$set(task_id ,0);
 				       					//this.FetchTimeSpent(task_id);
 				       					this.openTask = false;
 				       					this.currentTaskId = 0;
 				                }else if(data['status'] === 'success' && data['mode'] === 'open'){
 				                		//$(event.target).css('color', 'green');
 				       					$('#timer-'+task_id).countup();
-				       					//this.taskTimeSet.$set(task_id ,data['id']);
+				       					this.taskTimeSet.$set(task_id ,data['id']);
 				       					this.isTaskStarted.$set(task_id, true);
 				       					this.currentTaskId = task_id;
 				       					this.openTask = true;
@@ -999,8 +1039,7 @@ var vm = new Vue({
 		FetchAuthUserCurrentTask: function(){
 			this.$http.get('/api/auth/current/task/get', function(data){
 
-
-				if(this.authUser.is_developer){
+				if(this.authUser.is_developer === '1'){
 					
 					if(data != 0){			
 						var task_id = data['task_id'];
@@ -1028,21 +1067,17 @@ var vm = new Vue({
 						});
 
 						if( (typeof userInfo !== 'undefined') && userInfo !== null ){
-							$('.tm-current-working-user-photo-'+task_id).attr('src',userInfo.photo);
-							//$('.tm-current-working-user-name-'+task_id).html(userInfo.first_name);
-							$('.tm-user-assigned-preview-'+task_id).css('background' ,'rgb(37, 37, 43) url("http://testsite1.com/assets/apps/img/photos/preview.png") repeat scroll center center / cover;');
+							$('.tm-current-working-user-name-'+task_id).html(userInfo.first_name);
 							$('.tm-user-assigned-preview-'+task_id).css('display' ,'block');
+							$('.tm-user-assigned-preview-'+task_id).css('background' ,'url(http://tm.cloudology.codes'+userInfo.photo+') repeat scroll center center / cover');
 							$('#timer-icon-'+task_id).css('display', 'none');
 							$('.tm-total-time-per-task-'+task_id).css('display', 'none');
-							//$('.tm-time-records-'+task_id).css('display', 'none');
-
-						
 						}else{
 							$('.tm-total-time-per-task-'+task_id).css('display', 'block');
-							//$('.tm-time-records-'+task_id).css('display', 'block');
 							$('#timer-icon-'+task_id).css('display', 'block');
 							$('.tm-user-assigned-preview-'+task_id).css('display' ,'none');
 						}
+
  					});
 
 				}
@@ -1062,7 +1097,7 @@ var vm = new Vue({
 	            if (request.readyState == XMLHttpRequest.DONE) {
 	                var obj = jQuery.parseJSON(request.responseText);
 	                if(obj['status'] == "success"){
-	                    vm.FetchTasks();
+	                   // vm.FetchTasks();
 	                    vm.FetchMedia(task_id);
 	                }else{
 
@@ -1497,19 +1532,34 @@ Vue.filter('format_datetime', function (value) {
     format = format.replace(/\\(.)/g, "$1");
 
     return format;
-})
+});
+
+Vue.filter('strip_tags' , function(value, limit){
+	if(typeof value !== 'undefined'){
+		var rex = /(<([^>]+)>)/ig;
+		value =  value.replace(rex , "");
+		return value.substr(0, limit);
+	}else{
+		return;
+	}
+});
+
 
 Vue.filter('extract_hours', function (value) {
   return (( (value == null) || (value == '') || (typeof value === 'undefined' )) || value < 59 ) ? 0 : parseInt(value/60);
-})
+});
 
 Vue.filter('extract_minutes', function (value) {
   return (value == null || value == '' || (typeof value === 'undefined')) ? 0 : value%60;
-})
+});
 
 Vue.filter('managing_companies', function (value) {
   return vm.managingCompanies.indexOf(value) > -1 ? 'checked' : '';
-})
+});
+
+socket.on("notification-channel:App\\Events\\NotificationEvent", function(message){
+ 	    vm.FetchUserNotificationCount();
+ });
 
  socket.on("task-channel:App\\Events\\TaskEvent", function(message){
  	    //TODO : fetch only the newly created task, then insert
@@ -1522,7 +1572,7 @@ Vue.filter('managing_companies', function (value) {
 		*/
  	    vm.FetchTasks();
  	    if(vm.authUser['role_id'] == vm.roles['developer']){
- 	    	vm.FetchAuthUserCurrentTask();
+ 	    //	vm.FetchAuthUserCurrentTask();
  		}
  });
 

@@ -240,7 +240,7 @@ table.mceLayout {
 		
 		<span class="weight-bold font-12px pad-r-10px">filter by.. </span>
 		
-		<span class="pad-r-10px color-777 clickable sort-by-date" v-on:click="SortTask('date')">
+		<span class="pad-r-10px color-777 clickable sort-by-date sort-by-selected" v-on:click="SortTask('date')">
 		<i class="fa fa-clock-o tm-task-icon" >
 		</i>
 		Due Date
@@ -344,8 +344,8 @@ table.mceLayout {
 					 
 <!--PROJECT-->							
 					
-			<div class="tm-project-container desk-10-12 pad-r-15px mob-l-pad-r-0px mob-p-pad-r-10px"> 					
-				
+			<div class="tm-project-container tm-filter-by-date-selected desk-10-12 pad-r-15px mob-l-pad-r-0px mob-p-pad-r-10px">				
+			
 				<div class="tm-project-field desk-full">	
 				<select v-model="task.project_id" v-on:blur="OnSaveTask(task.id , 'project_id', $event )" name="project_id" id="project_id" class="form-control tm-project-status-border-@{{task.status_id}} font-18px pad-b-1px pad-l-0px weight-light tm-select-project" >					
 				<option class="pad-5px" v-for="project in projects" v-bind:value="project.id">@{{ project.project_name }}

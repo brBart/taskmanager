@@ -26,6 +26,9 @@ redis.subscribe('task-channel', function(err, count) {
 redis.subscribe('task-timer-channel',function(err, count){
 });
 
+redis.subscribe('notification-channel', function(err, count) {
+});
+
 redis.on('message', function(channel, message) {
     console.log('Message Recieved: ' + message);
     

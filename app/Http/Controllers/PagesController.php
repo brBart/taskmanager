@@ -24,6 +24,7 @@ use App\Credential;
 use App\Events\CommentEvent;
 use App\Notification;
 use App\Events\TaskEvent;
+use App\Events\NotificationEvent;
 use App\Events\StartEndTaskTimerEvent;
 use Auth;
 use DB;
@@ -105,6 +106,16 @@ class PagesController extends Controller
         $countries =  json_decode(file_get_contents('cities.json'), true);//json_decode(\Config::get('cities'), TRUE);
 
         return $countries[$country];
+    }
+
+    public function get_client_managed_project($user_id)
+    {
+        $project_manage = Manager::where('user_id' , '=' , $user_id)
+                                 ->where('manager' , '=' , 1)
+                                 ->get(['project_id'])
+                                 ->toArray();
+        
+        return $project_manage;
     }
 
     
@@ -1551,10 +1562,17 @@ class PagesController extends Controller
                 $new_comment = Comment::with('user')
                                       ->where('id', '=', $comment->id)
                                       ->get(['id','content','user_id','task_id','created_at']);
+                
+                $timestamp = Carbon::now();
+                DB::table('tasks')
+                  ->where('id',$task_id)
+                  ->update(array( 'updated_at'=>$timestamp ));
 
                 event(new CommentEvent($new_comment));
             }
         }
+
+        
         return response()->json(['response' =>$res]);
 
 
@@ -1655,20 +1673,36 @@ class PagesController extends Controller
             else
             {
                 
-                 $starting_time = new TimeSpent();
-                 $starting_time->start_datetime = Carbon::now();
-                 $starting_time->task_id = $task_id;
-                 $starting_time->user_id = $user_id;
+                $check_time = TimeSpent::where('user_id' ,'=', $user_id)
+                                       ->where('task_id' ,'=' ,$task_id)
+                                       ->whereNull('end_datetime')
+                                       ->first();
 
-                 //openning a new time
-                 if($starting_time->save())
-                 {
-                    $res = array( 'id' => $starting_time->id ,
-                                  'task_id' => $task_id, 
-                                  'status' =>  'success',
-                                  'mode' => 'open', 
-                                );
-                 } 
+                if($check_time)
+                {
+                    $res = array( 'id' => $check_time->id ,
+                                      'task_id' => $task_id, 
+                                      'status' =>  'success',
+                                      'mode' => 'open', 
+                                    );
+                }                           
+                else
+                {
+                     $starting_time = new TimeSpent();
+                     $starting_time->start_datetime = Carbon::now();
+                     $starting_time->task_id = $task_id;
+                     $starting_time->user_id = $user_id;
+
+                     //openning a new time
+                     if($starting_time->save())
+                     {
+                        $res = array( 'id' => $starting_time->id ,
+                                      'task_id' => $task_id, 
+                                      'status' =>  'success',
+                                      'mode' => 'open', 
+                                    );
+                     } 
+                }
 
 
 
@@ -1883,12 +1917,12 @@ class PagesController extends Controller
             else
             {
                 $tasks = Task::with('comments_relation')
-                                ->with('media_relation')
-                                ->with('timespent_relation')
-                                ->with('timespent_total_time')
-                                ->with('get_working_user')
-                                ->orderby('ordering','asc')
-                                ->get();
+                             ->with('media_relation')
+                             ->with('timespent_relation')
+                             ->with('timespent_total_time')
+                             ->with('get_working_user')
+                             ->orderby('ordering','asc')
+                             ->get();
 
             }
         }
@@ -2099,7 +2133,8 @@ class PagesController extends Controller
         if(Auth::user()->is_developer())
         {
             $tasks = Task::latest()->get();
-            return view('developer_task_lists', compact('tasks'));
+            $task_count = 1;
+            return view('developer_task_lists', compact('tasks','task_count'));
         }
         else
         {
@@ -2132,7 +2167,8 @@ class PagesController extends Controller
                     $save = DB::table($table)
                         ->where('id',$item_id)
                         ->update(array( $field => $value,
-                                        'updated_at'=>$timestamp 
+                                        'updated_at'=>$timestamp, 
+                                        'last_update_user_id'=> Auth::user()->id,
                                         )
                                 );
                 
@@ -2143,6 +2179,7 @@ class PagesController extends Controller
                         if($field == 'status_id')
                         {    
                             $this->task_status_email_notification($item_id);
+                            event(new NotificationEvent());
                         }
 
                         $res = array('id' => $item_id,
@@ -2405,9 +2442,9 @@ class PagesController extends Controller
 
     public function api_task_time_get($task_id)
     {
-
+        
         $timespents = TimeSpent::where('task_id','=', $task_id)
-                        ->get();
+                               ->get();
 
         $ts = array();
         $total_time_spent = 0;
@@ -2418,27 +2455,41 @@ class PagesController extends Controller
             if(strtotime($timespent->end_datetime) > 0)
             {
 
+                $user = User::find($timespent->user_id);
+
                 $start_taskdatetime = new \Datetime($timespent->start_datetime);
                 $end_taskdatetime = new \Datetime($timespent->end_datetime);
 
                 $interval = $start_taskdatetime->diff($end_taskdatetime);
-                $elapsed = $interval->format(' %h hours %i minutes %S seconds');
+                $elapsed_days = $interval->format('%a');
+                $elapsed_hours = $interval->format('%h');
+                $elapsed_minutes = $interval->format('%m');
+                $elapsed_seconds = $interval->format('%s');
+
+                if($elapsed_days > 0)
+                {
+                    $elapsed_days_to_hours = $elapsed_days*24;
+                    $elapsed_hours = $elapsed_days_to_hours + $elapsed_hours;
+                }
+
+                //$elapsed = $interval->format(' %a days %h hours %i minutes %S seconds');
                 //%y years %m months %a
+                $elapsed_time = "$elapsed_hours hours $elapsed_minutes minutes $elapsed_seconds seconds";
 
                 array_push( $ts ,array('id' => $timespent->id,
                             'task_id' => $timespent->task_id,
                             'user_id' => $timespent->user_id,
+                            'user_name' => $user->first_name.' '.$user->last_name,
                             'start_datetime' => $timespent->start_datetime,
                             'end_datetime' => $timespent->end_datetime,
-                            'spent' => $elapsed,
+                            'spent' => $elapsed_time,
                             )); 
             }
         
         }    
         
         return response()->json($ts);
-    }  
-
+    } 
 
     public function api_auth_currrent_task_get()
     {
@@ -2452,6 +2503,7 @@ class PagesController extends Controller
                          ->get(['project_id'])
                          ->toArray();
 
+
             $tasks = Task::with('comments_relation')
                             ->with('media_relation')
                             ->orderby('ordering','asc')
@@ -2462,8 +2514,7 @@ class PagesController extends Controller
                             ->toArray();
 
             $time_running =TimeSpent::with('user')
-                                    ->whereIn('task_id' , $tasks)
-                                    ->whereNull('end_datetime')->get();
+                                    ->whereIn('task_id' , $tasks);
            
         }
         else if(Auth::user()->is_admin())
@@ -2607,7 +2658,7 @@ class PagesController extends Controller
                                 $start_taskdatetime = new \Datetime($timespent->start_datetime);
                                 $end_taskdatetime = new \Datetime($timespent->end_datetime);
                                 $interval = $start_taskdatetime->diff($end_taskdatetime);
-                                $elapsed = $interval->format(' %h hours %i minutes ');
+                                $elapsed = $interval->format('%a days %h hours %i minutes ');
 
                                 $user_total_hour += intval($interval->format('%h'));
                                 $user_total_minutes += intval($interval->format('%i'));
@@ -2878,5 +2929,175 @@ class PagesController extends Controller
 
         
     }
+
+
+    /***************************Notifications*********************************************/
+
+
+
+    public function api_user_notifications_get(Request $request)
+    {
+        if ($request->isMethod('get'))
+        {
+            $user_id = Auth::user()->id;
+            $timestamp = Carbon::now();
+            $user_last_time_read = Notification::where('user_id','=', $user_id)
+                                               ->orderby('id','desc')
+                                               ->first();
+            $notifications = array();
+
+            if($user_last_time_read)
+            {
+
+                if(Auth::user()->is_admin())
+                {
+
+
+                    $unread_tasks = Task::with('project')
+                                        ->where('updated_at', '>=' , $user_last_time_read->last_time_read)
+                                        ->where('last_update_user_id', '!=',Auth::user()->id)
+                                        ->get();
+
+                    foreach($unread_tasks as $ut) 
+                    {
+
+                        $latest_comment = Comment::with('user')
+                                                 ->where('task_id' , '=' ,$ut->id)
+                                                 ->orderby('id', 'desc')
+                                                 ->first();
+
+                        $ut['comment'] = $latest_comment; 
+                        $ut['status'] = \Config::get('constants.task_status.reverse.'.$ut->status_id);
+
+                        array_push($notifications,$ut);
+
+                    }          
+
+                    $notification= Notification::find($user_last_time_read->id);
+                    $notification->last_time_read = $timestamp;
+                    $notification->save();
+
+                }
+                elseif (Auth::user()->is_client()) 
+                {
+                    $project_manage = Manager::where('user_id' , '=' , $this->auth_user['id'])
+                                     ->where('manager' , '=' , 1)
+                                     ->get(['project_id'])
+                                     ->toArray();
+
+                    $unread_tasks = Task::with('project')
+                                        ->where('updated_at', '>=' , $user_last_time_read->last_time_read)
+                                        ->where('last_update_user_id', '!=',Auth::user()->id)
+                                        ->whereIn('project_id' , $project_manage)
+                                        ->get();
+
+
+                    foreach($unread_tasks as $ut) 
+                    {
+
+                        $latest_comment = Comment::with('user')
+                                                 ->where('task_id' , '=' ,$ut->id)
+                                                 ->orderby('id', 'desc')
+                                                 ->first();
+
+                        $ut['comment'] = $latest_comment; 
+                        $ut['status'] = \Config::get('constants.task_status.reverse.'.$ut->status_id);
+
+                        array_push($notifications,$ut);
+
+                    }
+
+
+                    $notification= Notification::find($user_last_time_read->id);
+                    $notification->last_time_read = $timestamp;
+                    $notification->save();
+
+                }
+                else
+                {
+
+                }
+
+                
+                return \Response::make(json_encode($notifications, JSON_PRETTY_PRINT))
+                                   ->header('Content-Type', "application/json");  
+
+            }
+            else
+            {
+                $notification = new Notification();
+                $notification->user_id = Auth::user()->id;
+                $notification->last_time_read = $timestamp;
+                $notification->save();
+                return 0;
+            }
+
+        }
+
+    }
+
+
+
+
+
+
+    public function api_user_notifications_count_get(Request $request)
+    {
+        if ($request->isMethod('get'))
+        {
+            $user_id = Auth::user()->id;
+            $user_last_time_read = Notification::where('user_id','=', $user_id)
+                                               ->orderby('id','desc')
+                                               ->first();
+            $notifications = array();
+
+            if($user_last_time_read)
+            {
+
+                if(Auth::user()->is_admin())
+                {
+                    $notification_count = Task::with('project')
+                                        ->where('updated_at', '>=' , $user_last_time_read->last_time_read)
+                                        ->where('last_update_user_id', '!=',Auth::user()->id)
+                                        ->count();
+
+
+
+                    
+                }
+                elseif (Auth::user()->is_client()) 
+                {
+                    $project_manage = Manager::where('user_id' , '=' , Auth::user()->id)
+                                     ->where('manager' , '=' , 1)
+                                     ->get(['project_id'])
+                                     ->toArray();
+
+
+                    $notification_count = Task::with('project')
+                                        ->where('updated_at', '>=' , $user_last_time_read->last_time_read)
+                                        ->where('last_update_user_id', '!=',Auth::user()->id)
+                                        ->whereIn('project_id' , $project_manage)
+                                        ->count();
+
+                }
+                else
+                {
+
+                }
+
+                
+                return \Response::make(json_encode($notification_count, JSON_PRETTY_PRINT))
+                                   ->header('Content-Type', "application/json");  
+
+            }
+            else
+            {
+                return 0;
+            }
+
+        }
+
+    }
+
 
 }

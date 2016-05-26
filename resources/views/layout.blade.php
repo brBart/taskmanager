@@ -42,11 +42,12 @@ License: You must have a valid license purchased only from themeforest(the above
         <link href="/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
         <link href="/assets/apps/css/timer.css" rel="stylesheet" type="text/css" />
         <link href="/assets/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
-            <!-- BEGIN PAGE LEVEL PLUGINS -->
+
         <link href="/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
         <link href="/assets/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
         <link href="/assets/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+
 
         <!-- END THEME GLOBAL STYLES -->
         <!-- BEGIN THEME LAYOUT STYLES -->
@@ -124,6 +125,23 @@ License: You must have a valid license purchased only from themeforest(the above
             z-index: 9999;
             background: url(/assets/apps/img/images.gif) center no-repeat #fff;
         }
+        
+        .menu-trigger {padding:15px !important;margin-right:5px !important}
+        
+        
+        
+        #header {height:47px !important;min-height:47px !important;box-shadow:4px 2px 4px lightgrey }
+        
+        .page-header .burger-trigger .menu-close {left:0px;top:0px;padding-top:2px !important;padding-left:12px !important;}
+        
+        .menu-trigger:hover {opacity: 0.5}
+
+        .m-heading-1{ min-height: 250px; }
+        
+        .tm-notification-area-wrapper {max-height:80vh;opacity: .9;overflow-y: auto}
+        
+        a.tm-notification:hover {background:lightgrey;opacity: .9 !important}
+        
         </style>
 
         @yield('css')
@@ -141,286 +159,209 @@ License: You must have a valid license purchased only from themeforest(the above
                         <img src="/assets/layouts/layout7/img/m_toggler.png" alt=""> </button>
                     <div class="menu-overlay menu-overlay-bg-transparent">
                         <div class="menu-overlay-content">
-                            <ul class="menu-overlay-nav text-uppercase">
-                                <li>
-                                    <a href="/tasklists">Task Manager</a>
+          
+                            <ul class="menu-overlay-nav align-center max-width-720px">
+                                    <li class="desk-6-12 height-3-10vh " style="padding-top:5vh !important">
+                                    <a class="font-26px " href="/tasklists">
+                                    <i class="fa fa-tasks font-26px" aria-hidden="true"></i>
+                                    <br>
+                                    Tasks</a>
+                                    <br>
+                                    <div class="mob-l-hide">
+                                    <span class="font-12px weight-normal">filter by.. </span><br>
+                                    <a class=" font-13px" href="/tasklists">Time</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-13px" href="/tasklists">Project</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-13px" href="/tasklists">Assigned</a>
+                                    </div>
                                 </li>
-                                @if (Auth::user()->is_admin())
-                                    <li>
-                                        <a href="/company/viewall/0">Company Profiles</a>
-                                    </li>
-                                    <li>
-                                        <a href="/user/user/viewall/0">Client Profiles</a>
-                                    </li>
-                                    <li>
-                                        <a href="/skill/viewall/0">Team Skills</a>
-                                    </li>
-                                    <li>
-                                        <a href="/procedure/viewall/0">Procedures</a>
-                                    </li>
-               
-                                      <li>
-                                        <a href="/project/viewall/0">Projects</a>
-                                    </li>
-                                    <li>
-                                        <a href="/user/user/viewall/0">Manage Users</a>
-                                    </li>
-                                    <li>
-                                        <a href="/report">Report</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Invoicing</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Payroll</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Settings</a>
-                                    </li>
-                                @endif
-                                <li>
-                                    <a href="#">Logout</a>
+                                
+                                <li class="desk-6-12 height-3-10vh" style="padding-top:5vh !important">
+                                    <a class="font-26px " href="/user/user/viewall/0">
+                                    <i class="fa fa-user font-26px" aria-hidden="true"></i>
+                                    <br>
+                                    Users</a>
+                                    <br>
+                                    <div class="mob-l-hide">
+                                    <span class="font-12px weight-normal">filter by.. </span><br>
+                                    <a class=" font-13px" href="/user/user/viewall/0">Team</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-13px" href="/user/user/viewall/0">Clients</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-13px" href="/user/user/viewall/0">Companies</a>
+                                    </div>
                                 </li>
+                                
+                                <li class="desk-6-12 height-2-10vh">
+                                    <a class="font-26px " href="/project/viewall/0">
+                                    <i class="fa fa-pencil-square-o font-26px" aria-hidden="true"></i>
+                                    <br>
+                                    Projects</a>
+                                    <br>
+                                    <div class="mob-l-hide">
+                                    <span class="font-12px weight-normal">go to.. </span><br>
+                                    <a class=" font-13px" href="/project/viewall/0">Projects</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-13px" href="/project/viewall/0">Procedures</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-13px" href="/project/viewall/0">Skills</a>
+                                    </div>
+                                </li>
+                                                                
+                                <li class="desk-6-12 height-2-10vh">
+                                    <a class="font-26px " href="/project/viewall/0">
+                                    <i class="fa fa-calculator font-26px" aria-hidden="true"></i>
+                                    <br>
+                                    Accounting</a>
+                                    <br>
+                                    <div class="mob-l-hide">
+                                    <span class="font-12px weight-normal">go to.. </span><br>
+                                    <a class=" font-13px" href="/project/viewall/0">Payroll</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-13px" href="/project/viewall/0">Invoices</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-13px" href="/project/viewall/0">Reports</a>
+                                    </div>
+                                </li>
+                                
+                                 <li class="desk-6-12 height-3-10vh" style="padding-top:7vh !important">
+                                    <a class="font-20px " href="/project/viewall/0">
+                                    <i class="fa fa-cogs font-20px" aria-hidden="true"></i>
+                                    <br>
+                                    Settings
+                                    <br>
+                                    </a>
+                                    <div class="mob-l-hide">
+                                    <a class=" font-11px" href="/project/viewall/0">General</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-11px" href="/project/viewall/0">Notifications</a><span class="font-12px weight-normal"> | </span>
+                                    <a class=" font-11px" href="/project/viewall/0">Billing</a>
+                                    </div>
+                                </li>
+
+
+                                <li class="desk-6-12 height-3-10vh" style="padding-top:7vh !important">
+                                    <a class="font-20px " href="/project/viewall/0">
+                                    <i class="fa fa-sign-out font-20px" aria-hidden="true"></i>
+                                    <br>
+                                    Log out</a>
+                                    <div class="mob-l-hide">
+                                    <a class=" font-11px" href="/project/viewall/0">See you again soon :)</a>
+                                    </div>
+                                </li>
+
                             </ul>
+                            
+                                                        
+                            
                         </div>
                     </div>
                     <div class="menu-bg-overlay">
-                        <button class="menu-close">&times;</button>
+                        <button class="menu-close clearfix line-40px">&times;</button>
                     </div>
+                  
                     <!-- the overlay element -->
                 </div>
                 <!-- END NAV TRIGGER -->
+               
+               
                 <!-- BEGIN LOGO -->
-                <div class="page-logo">
-                    <a href="/tasklists">
-                        <img src="/assets/layouts/layout7/img/logo.png" alt="logo" class="logo-default" /> </a>
+                <div  class="desk-3-12 mob-l-5-12 mob-p-2-16 pad-13px">
+                <a href="/tasklists" class="color-black weight-bolder font-20px">
+                <i class="fa fa-hand-o-right font-20px pad-r-0px" aria-hidden="true">
+                </i>
+                <span class="mob-p-hide">Task Manager</span>
+                </a>
                 </div>
                 <!-- END LOGO -->
-                <!-- BEGIN TOP NAVIGATION MENU -->
-                <div class="top-menu">
-                    <ul class="nav navbar-nav pull-right">
-                        <!-- BEGIN NOTIFICATION DROPDOWN -->
-                        <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                        <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                <i class="icon-bell"></i>
-                                <span class="badge badge-success"> 7 </span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="external">
-                                    <h3>
-                                        <span class="bold">12 pending</span> notifications</h3>
-                                    <a href="#">view all</a>
-                                </li>
-                                <li>
-                                    <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="time">just now</span>
-                                                <span class="details">
-                                                    <span class="label label-sm label-icon label-success">
-                                                        <i class="fa fa-plus"></i>
-                                                    </span> New user registered. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="time">3 mins</span>
-                                                <span class="details">
-                                                    <span class="label label-sm label-icon label-danger">
-                                                        <i class="fa fa-bolt"></i>
-                                                    </span> Server #12 overloaded. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="time">10 mins</span>
-                                                <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="fa fa-bell-o"></i>
-                                                    </span> Server #2 not responding. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="time">14 hrs</span>
-                                                <span class="details">
-                                                    <span class="label label-sm label-icon label-info">
-                                                        <i class="fa fa-bullhorn"></i>
-                                                    </span> Application error. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="time">2 days</span>
-                                                <span class="details">
-                                                    <span class="label label-sm label-icon label-danger">
-                                                        <i class="fa fa-bolt"></i>
-                                                    </span> Database overloaded 68%. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="time">3 days</span>
-                                                <span class="details">
-                                                    <span class="label label-sm label-icon label-danger">
-                                                        <i class="fa fa-bolt"></i>
-                                                    </span> A user IP blocked. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="time">4 days</span>
-                                                <span class="details">
-                                                    <span class="label label-sm label-icon label-warning">
-                                                        <i class="fa fa-bell-o"></i>
-                                                    </span> Storage Server #4 not responding dfdfdfd. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="time">5 days</span>
-                                                <span class="details">
-                                                    <span class="label label-sm label-icon label-info">
-                                                        <i class="fa fa-bullhorn"></i>
-                                                    </span> System Error. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="time">9 days</span>
-                                                <span class="details">
-                                                    <span class="label label-sm label-icon label-danger">
-                                                        <i class="fa fa-bolt"></i>
-                                                    </span> Storage server failed. </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- END NOTIFICATION DROPDOWN -->
-                        <!-- BEGIN INBOX DROPDOWN -->
-                        <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                        <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                <i class="icon-envelope-open"></i>
-                                <span class="badge badge-danger"> 4 </span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="external">
-                                    <h3>You have
-                                        <span class="bold">7 New</span> Messages</h3>
-                                    <a href="#">view all</a>
-                                </li>
-                                <li>
-                                    <ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
-                                        <li>
-                                            <a href="#">
-                                                <span class="photo">
-                                                    <img src="/assets/layouts/layout3/img/avatar2.jpg" class="img-circle" alt=""> </span>
-                                                <span class="subject">
-                                                    <span class="from"> Lisa Wong </span>
-                                                    <span class="time">Just Now </span>
-                                                </span>
-                                                <span class="message"> Vivamus sed auctor nibh congue nibh. auctor nibh auctor nibh. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="photo">
-                                                    <img src="/assets/layouts/layout3/img/avatar3.jpg" class="img-circle" alt=""> </span>
-                                                <span class="subject">
-                                                    <span class="from"> Richard Doe </span>
-                                                    <span class="time">16 mins </span>
-                                                </span>
-                                                <span class="message"> Vivamus sed congue nibh auctor nibh congue nibh. auctor nibh auctor nibh. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="photo">
-                                                    <img src="/assets/layouts/layout3/img/avatar1.jpg" class="img-circle" alt=""> </span>
-                                                <span class="subject">
-                                                    <span class="from"> Bob Nilson </span>
-                                                    <span class="time">2 hrs </span>
-                                                </span>
-                                                <span class="message"> Vivamus sed nibh auctor nibh congue nibh. auctor nibh auctor nibh. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="photo">
-                                                    <img src="/assets/layouts/layout3/img/avatar2.jpg" class="img-circle" alt=""> </span>
-                                                <span class="subject">
-                                                    <span class="from"> Lisa Wong </span>
-                                                    <span class="time">40 mins </span>
-                                                </span>
-                                                <span class="message"> Vivamus sed auctor 40% nibh congue nibh. </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="photo">
-                                                    <img src="/assets/layouts/layout3/img/avatar3.jpg" class="img-circle" alt=""> </span>
-                                                <span class="subject">
-                                                    <span class="from"> Richard Doe </span>
-                                                    <span class="time">46 mins </span>
-                                                </span>
-                                                <span class="message"> Vivamus sed congue nibh auctor nibh congue nibh. auctor nibh auctor nibh. </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- END INBOX DROPDOWN -->
-                        <!-- BEGIN USER LOGIN DROPDOWN -->
-                        <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-                        <li class="dropdown dropdown-user">
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                                <div class="dropdown-user-inner">
-                                    <span class="username username-hide-on-mobile"> {{ Auth::user()->first_name }}
- </span> 
-                                    <img alt="" src="{{ Auth::user()->get_photo() }}" /> </div>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-default">
-                                <li>
-                                    <a href="/profile/edit">
-                                        <i class="icon-user"></i> My Profile </a>
-                                </li>
-                                <li>
-                                    <a href="page_calendar.html">
-                                        <i class="icon-calendar"></i> My Calendar </a>
-                                </li>
-                                <li>
-                                    <a href="inbox.html">
-                                        <i class="icon-envelope-open"></i> My Inbox
-                                        <span class="badge badge-danger"> 3 </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/tasklists">
-                                        <i class="icon-rocket"></i> My Tasks
-                                        <span class="badge badge-success"> 7 </span>
-                                    </a>
-                                </li>
-                                <li class="divider"> </li>
-                                <li>
-                                    <a href="extra_lock.html">
-                                        <i class="icon-lock"></i> Lock Screen </a>
-                                </li>
-                                <li>
-                                    <a href="/logout">
-                                        <i class="icon-key"></i> Log Out </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!-- END USER LOGIN DROPDOWN -->
-                    </ul>
-                </div>
-                <!-- END TOP NAVIGATION MENU -->
+                
+                
+                <div class="desk-7-12 mob-l-6-12 mob-p-8-12 pad-13px float-right">
+             
+                    <a href="/logout" class="width-auto float-right weight-bolder font-14px pad-r-15px">
+                
+                <span class="font-14px pad-r-3px mob-l-hide"> Log Out
+                </span>
+                <i class="fa fa-sign-out" aria-hidden="true">
+                </i>
+                </a>
+             
+             
+                        <a href="/support" class="width-auto float-right weight-bolder font-14px pad-r-15px">
+                
+                <span class="font-14px pad-r-3px mob-l-hide"> Support
+                </span>
+                <i class="fa fa-life-ring" aria-hidden="true">
+                </i>
+                </a>
+             
+                             <a class="width-auto float-right pad-r-15px" href="#" class="weight-bolder font-16px">
+                <i class="fa fa-bell-o" aria-hidden="true">
+                </i>
+                <span class="font-14px"> @{{ userNotificationCount }} </span><span @click="ShowHideNotificationArea($event)" class="mob-l-hide">Notifications</span>  
+                </a>
+             
+                  <a class="pad-r-15px width-auto float-right" href="/profile/edit" class="color-black font-30px">
+                <span class="font-14px weight-bold mob-p-hide"> {{ Auth::user()->first_name }}
+                </span>
+                <span class="pad-r-5px font-14px weight-bold tab-l-hide"> {{ Auth::user()->last_name }}
+                </span>
+                <div class="width-auto float-right" 
+                        style="background: lightgrey url('{{ Auth::user()->get_photo() }}') repeat scroll center center / cover;min-width:20px;min-height:20px;"> </div>
+                
+                </a>
+
+                
+                </div>  
+
+  
+   <div class="tm-notification-area-wrapper desk-full background-white pad-15px" v-show="showHideNotification" style="box-shadow: 2px 2px 4px grey">
+            
+    <div class="font-16px weight-normal pad-b-5px" style="color:#117cb8;">Notifications</div>
+
+<!--Notification--> 
+        
+        <div v-for="un in userNotification" class="desk-2-12 tab-l-4-12 tab-p-6-12 mob-l-full pad-b-10px">
+        
+        <a class="tm-notification-area" @click="ShowHideNotificationArea($event)" href="#task-id-@{{ un.id }}">
+        
+        <div  class="tm-notification pad-l-15px pad-r-20px " style="border-left: 3px solid #117cb8;">
+                
+                        <div class="desk-full font-333 font-12px pad-b-5px pad-t-10px"><span class="tm-status-header weight-bold">@{{ un.project.project_name }}</span></div>
+
+            <div class="desk-full font-333 font-16px pad-b-5px">@{{ un.title }}</div>
+            <div class="desk-full font-333 font-12px pad-b-20px"><span class="tm-status-header weight-bold">@{{ un.status }} </span><span class="font-12px">STATUS</span></div>
+           <div class="width-auto float-left" style="background: lightgrey url('{{ Auth::user()->get_photo() }}') repeat scroll center center / cover;min-width:33px;min-height:33px;max-width:33px;max-height:33px;margin-right:10px"> 
             </div>
+           
+            <span class="font-14px weight-bold mob-p-hide"> 
+            @{{ un.comment.user.first_name }}
+            </span>
+            <span class="pad-r-5px font-14px weight-bold tab-l-hide"> 
+            @{{ un.comment.user.last_name }}
+            </span>
+                <br>
+                <span style="display:inline-block" class="pad-t-5px pad-r-5px font-10px color-333">
+                @{{ un.comment.created_at }},                              
+                </span>
+                
+                <div class="clear-fix">&nbsp</div>
+
+                  <i class="fa fa-comments font-14px mob-p-font-14px "><span class="font-14px" v-text="un.comment.content | strip_tags 48" >  </span><span class="font-12px weight-normal"> &nbsp;&nbsp; more »</span>
+            </i>
+
+    
+        </div>
+            </a>
+        </div>  
+        
+          
+    
+    
+    
+    
+    
+    
+    </div>
+
+
+                
+                                 
+
+
+                        </div>
             <!-- END HEADER INNER -->
         </div>
         @endif
@@ -434,21 +375,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <!-- BEGIN CONTAINER -->
         <div class="page-container page-content-inner page-container-bg-solid">
             
-            @if (!Auth::check())
-            <!-- BEGIN BREADCRUMBS -->
-            <div class="breadcrumbs">
-                <div class="container-fluid">
-                    <h2 class="breadcrumbs-title">@yield('breadcrumbs_title')</h2>
-                    <ol class="breadcrumbs-list">
-                        <li>
-                            <a class="breadcrumbs-item-link" href="#">Home</a>
-                        </li>
-                       
-                    </ol>
-                </div>
-            </div>
-            <!-- END BREADCRUMBS -->
-            @endif
+            
 
             <!-- BEGIN CONTENT -->
             <div id="loader" class="se-pre-con" v-show="showLoader"></div>
@@ -466,582 +393,100 @@ License: You must have a valid license purchased only from themeforest(the above
             <!-- END CONTENT -->
         </div>
         <!-- END CONTAINER -->
-        <!-- BEGIN QUICK SIDEBAR -->
-        <a href="javascript:;" class="page-quick-sidebar-toggler">
-            <i class="icon-login"></i>
-        </a>
-        <div class="page-quick-sidebar-wrapper" data-close-on-body-click="false">
-            <div class="page-quick-sidebar">
-                <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a href="javascript:;" data-target="#quick_sidebar_tab_1" data-toggle="tab"> Users
-                            <span class="badge badge-danger">2</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-target="#quick_sidebar_tab_2" data-toggle="tab"> Alerts
-                            <span class="badge badge-success">7</span>
-                        </a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> More
-                            <i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li>
-                                <a href="javascript:;" data-target="#quick_sidebar_tab_3" data-toggle="tab">
-                                    <i class="icon-bell"></i> Alerts </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" data-target="#quick_sidebar_tab_3" data-toggle="tab">
-                                    <i class="icon-info"></i> Notifications </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" data-target="#quick_sidebar_tab_3" data-toggle="tab">
-                                    <i class="icon-speech"></i> Activities </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="javascript:;" data-target="#quick_sidebar_tab_3" data-toggle="tab">
-                                    <i class="icon-settings"></i> Settings </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active page-quick-sidebar-chat" id="quick_sidebar_tab_1">
-                        <div class="page-quick-sidebar-chat-users" data-rail-color="#ddd" data-wrapper-class="page-quick-sidebar-list">
-                            <h3 class="list-heading">Staff</h3>
-                            <ul class="media-list list-items">
-                                <li class="media">
-                                    <div class="media-status">
-                                        <span class="badge badge-success">8</span>
-                                    </div>
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar3.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Bob Nilson</h4>
-                                        <div class="media-heading-sub"> Project Manager </div>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar1.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Nick Larson</h4>
-                                        <div class="media-heading-sub"> Art Director </div>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <div class="media-status">
-                                        <span class="badge badge-danger">3</span>
-                                    </div>
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar4.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Deon Hubert</h4>
-                                        <div class="media-heading-sub"> CTO </div>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar2.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Ella Wong</h4>
-                                        <div class="media-heading-sub"> CEO </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <h3 class="list-heading">Customers</h3>
-                            <ul class="media-list list-items">
-                                <li class="media">
-                                    <div class="media-status">
-                                        <span class="badge badge-warning">2</span>
-                                    </div>
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar6.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Lara Kunis</h4>
-                                        <div class="media-heading-sub"> CEO, Loop Inc </div>
-                                        <div class="media-heading-small"> Last seen 03:10 AM </div>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <div class="media-status">
-                                        <span class="label label-sm label-success">new</span>
-                                    </div>
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar7.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Ernie Kyllonen</h4>
-                                        <div class="media-heading-sub"> Project Manager,
-                                            <br> SmartBizz PTL </div>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar8.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Lisa Stone</h4>
-                                        <div class="media-heading-sub"> CTO, Keort Inc </div>
-                                        <div class="media-heading-small"> Last seen 13:10 PM </div>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <div class="media-status">
-                                        <span class="badge badge-success">7</span>
-                                    </div>
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar9.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Deon Portalatin</h4>
-                                        <div class="media-heading-sub"> CFO, H&D LTD </div>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar10.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Irina Savikova</h4>
-                                        <div class="media-heading-sub"> CEO, Tizda Motors Inc </div>
-                                    </div>
-                                </li>
-                                <li class="media">
-                                    <div class="media-status">
-                                        <span class="badge badge-danger">4</span>
-                                    </div>
-                                    <img class="media-object" src="/assets/layouts/layout/img/avatar11.jpg" alt=".">
-                                    <div class="media-body">
-                                        <h4 class="media-heading">Maria Gomez</h4>
-                                        <div class="media-heading-sub"> Manager, Infomatic Inc </div>
-                                        <div class="media-heading-small"> Last seen 03:10 AM </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="page-quick-sidebar-item">
-                            <div class="page-quick-sidebar-chat-user">
-                                <div class="page-quick-sidebar-nav">
-                                    <a href="javascript:;" class="page-quick-sidebar-back-to-list">
-                                        <i class="icon-arrow-left"></i>Back</a>
-                                </div>
-                                <div class="page-quick-sidebar-chat-user-messages">
-                                    <div class="post out">
-                                        <img class="avatar" alt="" src="/assets/layouts/layout/img/avatar3.jpg" />
-                                        <div class="message">
-                                            <span class="arrow"></span>
-                                            <a href="javascript:;" class="name">Bob Nilson</a>
-                                            <span class="datetime">20:15</span>
-                                            <span class="body"> When could you send me the report ? </span>
-                                        </div>
-                                    </div>
-                                    <div class="post in">
-                                        <img class="avatar" alt="" src="/assets/layouts/layout/img/avatar2.jpg" />
-                                        <div class="message">
-                                            <span class="arrow"></span>
-                                            <a href="javascript:;" class="name">Ella Wong</a>
-                                            <span class="datetime">20:15</span>
-                                            <span class="body"> Its almost done. I will be sending it shortly </span>
-                                        </div>
-                                    </div>
-                                    <div class="post out">
-                                        <img class="avatar" alt="" src="/assets/layouts/layout/img/avatar3.jpg" />
-                                        <div class="message">
-                                            <span class="arrow"></span>
-                                            <a href="javascript:;" class="name">Bob Nilson</a>
-                                            <span class="datetime">20:15</span>
-                                            <span class="body"> Alright. Thanks! :) </span>
-                                        </div>
-                                    </div>
-                                    <div class="post in">
-                                        <img class="avatar" alt="" src="/assets/layouts/layout/img/avatar2.jpg" />
-                                        <div class="message">
-                                            <span class="arrow"></span>
-                                            <a href="javascript:;" class="name">Ella Wong</a>
-                                            <span class="datetime">20:16</span>
-                                            <span class="body"> You are most welcome. Sorry for the delay. </span>
-                                        </div>
-                                    </div>
-                                    <div class="post out">
-                                        <img class="avatar" alt="" src="/assets/layouts/layout/img/avatar3.jpg" />
-                                        <div class="message">
-                                            <span class="arrow"></span>
-                                            <a href="javascript:;" class="name">Bob Nilson</a>
-                                            <span class="datetime">20:17</span>
-                                            <span class="body"> No probs. Just take your time :) </span>
-                                        </div>
-                                    </div>
-                                    <div class="post in">
-                                        <img class="avatar" alt="" src="/assets/layouts/layout/img/avatar2.jpg" />
-                                        <div class="message">
-                                            <span class="arrow"></span>
-                                            <a href="javascript:;" class="name">Ella Wong</a>
-                                            <span class="datetime">20:40</span>
-                                            <span class="body"> Alright. I just emailed it to you. </span>
-                                        </div>
-                                    </div>
-                                    <div class="post out">
-                                        <img class="avatar" alt="" src="/assets/layouts/layout/img/avatar3.jpg" />
-                                        <div class="message">
-                                            <span class="arrow"></span>
-                                            <a href="javascript:;" class="name">Bob Nilson</a>
-                                            <span class="datetime">20:17</span>
-                                            <span class="body"> Great! Thanks. Will check it right away. </span>
-                                        </div>
-                                    </div>
-                                    <div class="post in">
-                                        <img class="avatar" alt="" src="/assets/layouts/layout/img/avatar2.jpg" />
-                                        <div class="message">
-                                            <span class="arrow"></span>
-                                            <a href="javascript:;" class="name">Ella Wong</a>
-                                            <span class="datetime">20:40</span>
-                                            <span class="body"> Please let me know if you have any comment. </span>
-                                        </div>
-                                    </div>
-                                    <div class="post out">
-                                        <img class="avatar" alt="" src="/assets/layouts/layout/img/avatar3.jpg" />
-                                        <div class="message">
-                                            <span class="arrow"></span>
-                                            <a href="javascript:;" class="name">Bob Nilson</a>
-                                            <span class="datetime">20:17</span>
-                                            <span class="body"> Sure. I will check and buzz you if anything needs to be corrected. </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="page-quick-sidebar-chat-user-form">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Type a message here.">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn green">
-                                                <i class="icon-paper-clip"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane page-quick-sidebar-alerts" id="quick_sidebar_tab_2">
-                        <div class="page-quick-sidebar-alerts-list">
-                            <h3 class="list-heading">General</h3>
-                            <ul class="feeds list-items">
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-info">
-                                                    <i class="fa fa-check"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> You have 4 pending tasks.
-                                                    <span class="label label-sm label-warning "> Take action
-                                                        <i class="fa fa-share"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> Just now </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-success">
-                                                        <i class="fa fa-bar-chart-o"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc"> Finance Report for year 2013 has been released. </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date"> 20 mins </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-danger">
-                                                    <i class="fa fa-user"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> You have 5 pending membership that requires a quick review. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> 24 mins </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-info">
-                                                    <i class="fa fa-shopping-cart"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> New order received with
-                                                    <span class="label label-sm label-success"> Reference Number: DR23923 </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> 30 mins </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-success">
-                                                    <i class="fa fa-user"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> You have 5 pending membership that requires a quick review. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> 24 mins </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-info">
-                                                    <i class="fa fa-bell-o"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> Web server hardware needs to be upgraded.
-                                                    <span class="label label-sm label-warning"> Overdue </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> 2 hours </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-default">
-                                                        <i class="fa fa-briefcase"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc"> IPO Report for year 2013 has been released. </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date"> 20 mins </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                            <h3 class="list-heading">System</h3>
-                            <ul class="feeds list-items">
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-info">
-                                                    <i class="fa fa-check"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> You have 4 pending tasks.
-                                                    <span class="label label-sm label-warning "> Take action
-                                                        <i class="fa fa-share"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> Just now </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-danger">
-                                                        <i class="fa fa-bar-chart-o"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc"> Finance Report for year 2013 has been released. </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date"> 20 mins </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-default">
-                                                    <i class="fa fa-user"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> You have 5 pending membership that requires a quick review. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> 24 mins </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-info">
-                                                    <i class="fa fa-shopping-cart"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> New order received with
-                                                    <span class="label label-sm label-success"> Reference Number: DR23923 </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> 30 mins </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-success">
-                                                    <i class="fa fa-user"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> You have 5 pending membership that requires a quick review. </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> 24 mins </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="col1">
-                                        <div class="cont">
-                                            <div class="cont-col1">
-                                                <div class="label label-sm label-warning">
-                                                    <i class="fa fa-bell-o"></i>
-                                                </div>
-                                            </div>
-                                            <div class="cont-col2">
-                                                <div class="desc"> Web server hardware needs to be upgraded.
-                                                    <span class="label label-sm label-default "> Overdue </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col2">
-                                        <div class="date"> 2 hours </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <div class="col1">
-                                            <div class="cont">
-                                                <div class="cont-col1">
-                                                    <div class="label label-sm label-info">
-                                                        <i class="fa fa-briefcase"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="cont-col2">
-                                                    <div class="desc"> IPO Report for year 2013 has been released. </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col2">
-                                            <div class="date"> 20 mins </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="tab-pane page-quick-sidebar-settings" id="quick_sidebar_tab_3">
-                        <div class="page-quick-sidebar-settings-list">
-                            <h3 class="list-heading">General Settings</h3>
-                            <ul class="list-items borderless">
-                                <li> Enable Notifications
-                                    <input type="checkbox" class="make-switch" checked data-size="small" data-on-color="success" data-on-text="ON" data-off-color="default" data-off-text="OFF"> </li>
-                                <li> Allow Tracking
-                                    <input type="checkbox" class="make-switch" data-size="small" data-on-color="info" data-on-text="ON" data-off-color="default" data-off-text="OFF"> </li>
-                                <li> Log Errors
-                                    <input type="checkbox" class="make-switch" checked data-size="small" data-on-color="danger" data-on-text="ON" data-off-color="default" data-off-text="OFF"> </li>
-                                <li> Auto Sumbit Issues
-                                    <input type="checkbox" class="make-switch" data-size="small" data-on-color="warning" data-on-text="ON" data-off-color="default" data-off-text="OFF"> </li>
-                                <li> Enable SMS Alerts
-                                    <input type="checkbox" class="make-switch" checked data-size="small" data-on-color="success" data-on-text="ON" data-off-color="default" data-off-text="OFF"> </li>
-                            </ul>
-                            <h3 class="list-heading">System Settings</h3>
-                            <ul class="list-items borderless">
-                                <li> Security Level
-                                    <select class="form-control input-inline input-sm input-small">
-                                        <option value="1">Normal</option>
-                                        <option value="2" selected>Medium</option>
-                                        <option value="e">High</option>
-                                    </select>
-                                </li>
-                                <li> Failed Email Attempts
-                                    <input class="form-control input-inline input-sm input-small" value="5" /> </li>
-                                <li> Secondary SMTP Port
-                                    <input class="form-control input-inline input-sm input-small" value="3560" /> </li>
-                                <li> Notify On System Error
-                                    <input type="checkbox" class="make-switch" checked data-size="small" data-on-color="danger" data-on-text="ON" data-off-color="default" data-off-text="OFF"> </li>
-                                <li> Notify On SMTP Error
-                                    <input type="checkbox" class="make-switch" checked data-size="small" data-on-color="warning" data-on-text="ON" data-off-color="default" data-off-text="OFF"> </li>
-                            </ul>
-                            <div class="inner-content">
-                                <button class="btn btn-success">
-                                    <i class="icon-settings"></i> Save Changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END QUICK SIDEBAR -->
+
         <!-- BEGIN FOOTER -->
-        <div class="page-footer">
-            <div class="go2top">
+        <div class="page-footer desk-full min-height-40px">
+                    
+                <div class="desk-3-12 mob-p-full mob-p-align-center font-14px line-20px" style="padding-left:8px;padding-top:0px">
+                    <a href="http://cloudology.codes" class="weight-normal font-11px pad-r-15px color-grey" target="_blank">
+                    Copyright © 2016<span class="tab-p-hide mob-p-show">
+                <span class="mob-p-hide"> | <i class="fa fa-hand-o-right font-12px pad-r-0px" aria-hidden="true">
+                </i> Task Manager</span>
+                    </a>
+                </div>
+                
+                
+            <div class="desk-9-12 pad-r-3-12 align-center pad-t-10px mob-p-hide">
+                <a href="/support" class="weight-bolder font-14px ">
+                
+                
+                <span class="font-12px pad-r-3px "> Tasks
+                </span>
+                </a>
+                <span style="color:#D3D3D3;"> | </span>
+
+
+                <a href="/support" class="weight-bolder font-12px ">
+                
+                <span class="font-12px pad-r-3px "> Users
+                </span>
+
+                </a>
+
+                <span style="color:#D3D3D3;"> | </span>
+
+                <a href="/support" class="weight-bolder font-12px ">
+                
+               
+                <span class="font-12px pad-r-3px "> Projects
+                </span>
+                </a>
+
+                <span style="color:#D3D3D3;"> | </span>
+
+                <a href="/support" class="weight-bolder font-12px ">
+                
+                
+                <span class="font-12px pad-r-3px "> Accounting
+                </span>
+                </a>
+                
+                <span style="color:#D3D3D3;"> | </span>
+                
+                <a href="/support" class="weight-bolder font-12px ">
+                
+                
+                <span class="font-12px pad-r-3px "> Settings
+                </span>
+                </a>
+                
+                <span class=" mob-l-hide" style="color:#D3D3D3;"> | </span>
+                
+                <a href="/support" class="weight-bolder font-12px mob-l-hide">
+                
+                
+                <span class="font-12px pad-r-3px "> Support
+                </span>
+                </a>
+                
+                <span style="color:#D3D3D3;"> | </span>
+                
+                <a href="/support" class="weight-bolder font-12px ">
+                
+                
+                <span class="font-12px pad-r-3px "> Logout
+                </span>
+                </a>
+                
+        </div>
+
+                
+
+
+
+            <div class="go2top font-18px pad-4px">
                 <i class="icon-arrow-up"></i>
             </div>
         </div>
         <!-- END FOOTER -->
         <!-- BEGIN QUICK SIDEBAR TOGGLER -->
-        <button type="button" class="quick-sidebar-toggler" data-toggle="collapse">
+       <!-- <button type="button" class="quick-sidebar-toggler" data-toggle="collapse">
             <span class="sr-only">Toggle Quick Sidebar</span>
             <i class="icon-logout"></i>
             <div class="quick-sidebar-notification">
                 <span class="badge badge-danger">7</span>
             </div>
-        </button>
+        </button>-->
         <!-- template for the modal component -->
             <script type="x/template" id="modal-template">
               <div class="modal-mask" v-show="show" transition="modal"> 
@@ -1071,10 +516,6 @@ License: You must have a valid license purchased only from themeforest(the above
                 </div>
               </div>
             </script>
-
-            <div> 
-
-            </div>
             <!--END -->
         <!-- END QUICK SIDEBAR TOGGLER -->
         <!--[if lt IE 9]>
@@ -1105,10 +546,10 @@ License: You must have a valid license purchased only from themeforest(the above
         <script src="/assets/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
         <script src="/assets/global/plugins/socket.io/socket.io-1.4.5.js"></script>
         <script src="/assets/apps/scripts/timer.js" type="text/javascript"></script>
-        <!--   <script src='/js/libs/tinymce/js/tinymce/tinymce.min.js'></script>  -->
-        
+        <!--<script src='/js/libs/tinymce/tinymce.min.js'></script>         -->
+
         <script src="/assets/global/scripts/app.min.js" type="text/javascript"></script>
-        
+    
         <script src="/assets/global/plugins/moment.min.js" type="text/javascript"></script>
         <script src="/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
         <script src="/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
@@ -1116,9 +557,11 @@ License: You must have a valid license purchased only from themeforest(the above
         <script src="/assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
         <script src="/assets/global/plugins/components-date-time-pickers.min.js" type="text/javascript"></script>
         <script src='/js/libs/tinymce/tiny_mce.js'></script>
-        
+
+         <script src='/js/libs/tinymce/tiny_mce.js'></script>
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL SCRIPTS -->
+        <script src="/assets/global/scripts/app.min.js" type="text/javascript"></script>
         <!-- END THEME GLOBAL SCRIPTS -->
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
       <!--  <script src="/assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>-->
@@ -1134,8 +577,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <!-- <script src="/js/global.js"></script> -->
         @yield('javascripts')
         <script >
-            var host ='{!! \Config::get("constants.url") !!}';
-            
+              
             var main = {
 
                 data: function(){
@@ -1158,7 +600,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 phone : '{!! Auth::user()->phone !!}',
                                                 city : '{!! Auth::user()->city !!}',
                                                 email : '{!! Auth::user()->email !!}',
-                                                country : '{!! Auth::user()->country != '' ? Auth::user()->country : '' !!}',
+                                                country : '{!! Auth::user()->country !!}',
                                                 timezone : '{!! Auth::user()->timezone !!}',
                                                 role_id : '{!! Auth::user()->role_id !!}',
                                                 role :  '{!! Auth::user()->role() !!}',
@@ -1182,6 +624,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
                 ready: function(){
                         this.showLoader= false;
+                        this.FetchUserNotificationCount();
 
                         $(".se-pre-con").css('display','none');
                 },

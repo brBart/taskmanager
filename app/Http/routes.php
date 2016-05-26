@@ -263,6 +263,10 @@ Route::group(['middleware' => 'web'], function () {
 
 	Route::get('/api/sort/task/get' ,'PagesController@api_sort_task_get');
 
+	Route::get('/api/user/notifications/get', 'PagesController@api_user_notifications_get');
+
+	Route::get('/api/user/notifications/count/get', 'PagesController@api_user_notifications_count_get');
+
 	/*************************api*******************************************/
 });
 /*

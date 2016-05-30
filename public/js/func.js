@@ -14,17 +14,20 @@ String.prototype.toJson = function(){
 }
 
 
-function parseDate( input ='' ){
-	if(input != ''){
-		var date_time = input.split(' ');
-		var ymd = date_time[0].split('-');
-		var hms = date_time[1].split(':');
-		
-		return new Date(ymd[0] ,ymd[1]-1 , ymd[2] , hms[0] , hms[1] , hms[2]);
-	}else{
+function parseDate( input ){
+	if(typeof input !== input){
+        if((input != '') && (input.length === 19)){
+           
+    		var date_time = input.split(' ');
+    		var ymd = date_time[0].split('-');
+    		var hms = date_time[1].split(':');
+    		
+    		return new Date(ymd[0] ,ymd[1]-1 , ymd[2] , hms[0] , hms[1] , hms[2]);
+    	}else{
 
-		return 0;
-	}
+    		return 0;
+    	}
+    }
 }
 
 

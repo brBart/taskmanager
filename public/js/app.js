@@ -873,7 +873,9 @@ var vm = new Vue({
 		FetchTimeSpent: function(task_id){
 
 			this.$http.get('/api/task/timespent/'+task_id+'/get',function(data){
-				this.$set('timespents['+task_id+']', data);
+				
+				this.$set('timespents['+task_id+']', data.timespent);
+				this.$set('total_timespents['+task_id+']', data.task_total_time_spent);
 			})	
 		},
 
@@ -1039,7 +1041,7 @@ var vm = new Vue({
 		FetchAuthUserCurrentTask: function(){
 			this.$http.get('/api/auth/current/task/get', function(data){
 
-				if(this.authUser.is_developer === '1'){
+				if(this.authUser.is_developer){
 					
 					if(data != 0){			
 						var task_id = data['task_id'];
@@ -1445,8 +1447,10 @@ Vue.filter('remove_path', function(path){
 
 Vue.filter('format_datetime', function (value) {
 
+
 	if(typeof value === 'undefined')
 		value = new Date();
+
 
 	var date = parseDate(value);	
 	var utc = false;
@@ -1621,7 +1625,7 @@ if(vm.authUser.role == 'admin' || vm.authUser.role == 'client'){
 			var old_index = $(ui.item).data('startIndex');
 			var new_index = ui.item.index();
 
-			var title = vm.tasks[old_index].title;
+			//var title = vm.tasks[old_index].title;
 
 			//TODO : seriazlize the tasks object if possible
 			var serialize_tasks = $('.tm-tasks-main-container').find("input[name='task_order']").serialize();

@@ -80,11 +80,12 @@ class Task extends Model
     }
 
     public function timespent_total_time()
-    {
-        return  $this->hasMany('App\TimeSpent')
-                    ->selectRaw('task_id, sum(TIMESTAMPDIFF(minute, start_datetime, end_datetime)) as minutes_elapsed')
-                    ->whereNotNull('end_datetime')
-                    ->groupBy('task_id');
+    {  
+      return $this->hasMany('App\TimeSpent', 'task_id')
+                                ->selectRaw('task_id, sum(TIMESTAMPDIFF(minute, start_datetime, end_datetime)) as minutes_elapsed')
+                                ->whereNotNull('end_datetime')
+                                ->groupBy('task_id');
+
         
     }  
 

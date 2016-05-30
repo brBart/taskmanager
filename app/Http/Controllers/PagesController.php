@@ -2446,8 +2446,12 @@ class PagesController extends Controller
         $timespents = TimeSpent::where('task_id','=', $task_id)
                                ->get();
 
+        $timespent_details = array();
         $ts = array();
         $total_time_spent = 0;
+        $total_hours = 0;
+        $total_minutes = 0;
+        $total_seconds = 0;
 
         foreach ($timespents as $timespent) 
         {
@@ -2463,8 +2467,12 @@ class PagesController extends Controller
                 $interval = $start_taskdatetime->diff($end_taskdatetime);
                 $elapsed_days = $interval->format('%a');
                 $elapsed_hours = $interval->format('%h');
-                $elapsed_minutes = $interval->format('%m');
+                $elapsed_minutes = $interval->format('%i');
                 $elapsed_seconds = $interval->format('%s');
+
+                $total_hours = $total_hours + $elapsed_hours;
+                $total_minutes = $total_minutes + $elapsed_minutes;
+                $total_seconds = $total_seconds + $elapsed_seconds;
 
                 if($elapsed_days > 0)
                 {
@@ -2484,11 +2492,40 @@ class PagesController extends Controller
                             'end_datetime' => $timespent->end_datetime,
                             'spent' => $elapsed_time,
                             )); 
+
+
             }
         
         }    
-        
-        return response()->json($ts);
+
+        if($total_seconds > 60 )
+        {
+            $total_minutes = $total_minutes + floor($total_seconds/60);
+            $total_seconds = $total_seconds%60;
+        }
+        else if($total_seconds == 60 )
+        {
+            $total_minutes = $total_minutes + 1;
+            $total_seconds = 0;
+        }
+
+        if($total_minutes > 60)
+        {
+            $total_hours = $total_hours + floor($total_minutes/60);
+            $total_minutes = $total_minutes%60;
+        }
+        else if($total_minutes == 60)
+        {
+            $total_hours = $total_hours + 1;
+            $total_minutes = 0;
+        }
+
+        $overall_elapsed_time = "$total_hours hours $total_minutes minutes $total_seconds seconds";
+        $timespent_details['timespent'] = $ts;
+        $timespent_details['task_total_time_spent'] = $overall_elapsed_time; 
+
+        return \Response::make(json_encode($timespent_details, JSON_PRETTY_PRINT))
+                                   ->header('Content-Type', "application/json");
     } 
 
     public function api_auth_currrent_task_get()

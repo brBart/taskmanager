@@ -842,15 +842,17 @@ table.mceLayout {
 				   			
 				   			<div class="tm-current-record desk-full weight-normal font-10px line-12px border-l-3px border-solid border-t-none border-r-none border-b-none pad-l-10px pad-t-5px pad-b-5px">
 					   		<span class="color-333">
-					   		TOTAL = @{{ task.timespent_total_time[0].minutes_elapsed | extract_hours  }}
+					   		TOTAL = @{{ total_timespents[task.id]  }}
 					   		</span>
-					   		<span class="font-10px color-333">
+					   		
+					   		<!--<span class="font-10px color-333">
 					   		hrs,
 					   		</span>
-					   		 @{{ task.timespent_total_time[0].minutes_elapsed | extract_minutes  }} 
-					   		<span class="font-10px color-333">
+					   		 @{{ task.timespent_total_time[0].minutes_elapsed | extract_minutes  }} -->
+					   		
+					   		<!--<span class="font-10px color-333">
 					   		min
-					   		</span>
+					   		</span>-->
 					   		
 					   		</div>
 

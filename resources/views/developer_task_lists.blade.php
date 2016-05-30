@@ -452,55 +452,6 @@ table.mceLayout {
 		
 		</div>
 
-<!--SKILL-->
-		
-		<div class="tm-admin-selects-container desk-2-16 tab-l-2-16 mob-l-7-16  mob-l-pad-b-5px pad-r-10px">  <!--9-->
-					   		
-			<div class="tm-skill-field  desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'skill_id', $event )" id="skill_id" name="skill_id" class="form-control  tm-project-status-@{{task.status_id}}" v-model="task.skill_id">
-			<option class="pad-5px" v-for="skill in skills" v-bind:value="skill.id"> @{{ skill.name }}
-			</option> 
-			</select>
-			</div>
-						   
-			<div class="tm-skill-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Skill
-			</div>
-		
-		</div>
-
-<!--PROCEDURE-->
-		
-		<div class="tm-procedure-container desk-2-16 tab-l-2-16 mob-l-5-16 mob-p-8-16 mob-l-pad-l-40px mob-p-pad-l-20px pad-r-10px">
-					   		
-			<div class="tm-procedure-field  desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'procedure_id', $event )" name="procedure_id" id="procedure_id" class="form-control tm-project-status-@{{task.status_id}}" v-model="task.procedure_id">
-			<option   class="pad-5px" v-for="procedure in procedures" v-bind:value="procedure.id"> @{{ procedure.title }} 
-			</option>
-		    </select>
-		    </div>
-		                    
-		    <div class="tm-procedure-title  desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid " style="border-width: 2px 0px 0px 0px">Procedure
-		    </div>
-		
-		</div>
-
-<!--ASSIGN-->
-					 
-		<div class="tm-assign-container desk-2-16 tab-l-2-16 mob-l-4-16 mob-p-8-16 mob-l-pad-l-0px mob-p-pad-l-0px pad-r-10px">
-						   
-			<div class="tm-assign-field desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'assign_user_id', $event )" class="form-control tm-project-status-@{{task.status_id}}" id="assign_user_id" name="assign_user_id" v-model="task.assign_user_id" >
-			<option  class="pad-5px"  v-for="developer in developers" v-bind:value="developer.id"> @{{ developer.first_name }} @{{ developer.last_name }} 
-			</option>
-		    </select>
-			</div>
-		
-			<div class="tm-assign-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Assign
-			</div>
-		
-		</div>
-
-					
 <!--ESTIMATE-->
 		
 		<div class="tm-estimate-container  desk-2-16 tab-l-2-16 mob-l-3-16 mob-p-7-16 mob-p-pad-l-20px pad-t-15px pad-r-10px mob-p-pad-r-0px">
@@ -842,15 +793,17 @@ table.mceLayout {
 				   			
 				   			<div class="tm-current-record desk-full weight-normal font-10px line-12px border-l-3px border-solid border-t-none border-r-none border-b-none pad-l-10px pad-t-5px pad-b-5px">
 					   		<span class="color-333">
-					   		TOTAL = @{{ task.timespent_total_time[0].minutes_elapsed | extract_hours  }}
+					   		TOTAL = @{{ total_timespents[task.id]  }}
 					   		</span>
-					   		<span class="font-10px color-333">
+					   		
+					   		<!--<span class="font-10px color-333">
 					   		hrs,
 					   		</span>
-					   		 @{{ task.timespent_total_time[0].minutes_elapsed | extract_minutes  }} 
-					   		<span class="font-10px color-333">
+					   		 @{{ task.timespent_total_time[0].minutes_elapsed | extract_minutes  }} -->
+					   		
+					   		<!--<span class="font-10px color-333">
 					   		min
-					   		</span>
+					   		</span>-->
 					   		
 					   		</div>
 

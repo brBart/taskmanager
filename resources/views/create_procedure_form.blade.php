@@ -69,19 +69,27 @@
 
 @section('javascripts')
 
-<script src='//cdn.tinymce.com/4/tinymce.min.js'></script> 
-
 <script>
+
 
 tinymce.init({
     selector: "textarea",
-    setup: function(editor) {
-        editor.on('blur', function(e) {
-          vm.SaveProcedureDescription('description', tinyMCE.activeEditor.getContent() );
+    menubar: false,
+    setup : function (ed) {
+        ed.onInit.add(function (ed) {
+
+            /* onBlur */
+            tinymce.dom.Event.add(ed.getBody(), 'blur', function (e) {
+                vm.SaveProcedureDescription('description',tinymce.activeEditor.getContent());  
+            });
+
+            /* onFocus */
+           /* tinymce.dom.Event.add(ed.getBody(), 'focus', function (e) {
+                console.log('Editor with ID "' + ed.id + '" has focus.');   
+            });*/
         });
     }
 });
-
 
 var mixin = {
 

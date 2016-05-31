@@ -162,6 +162,14 @@ Route::group(['middleware' => 'web'], function () {
 
 	Route::post('api/project/manager/post','PagesController@api_project_manager_post');
 
+	Route::post('/api/project/delete/post' , 'PagesController@api_project_delete_post');
+
+	Route::post('/api/skill/delete/post' , 'PagesController@api_skill_delete_post');
+
+	Route::post('/api/procedure/delete/post' , 'PagesController@api_procedure_delete_post');
+
+	
+
 	/***********************Company******************************************/
 	Route::get('api/companies/get', 'PagesController@api_companies_get');
 
@@ -177,6 +185,10 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('api/users/{role}/get','PagesController@api_users_get');
 
 	Route::post('/api/user/post', 'PagesController@api_user_post');
+
+	Route::post('/api/user/delete/post', 'PagesController@api_user_delete_post');
+
+	Route::post('/api/company/delete/post', 'PagesController@api_company_delete_post');
 
 	//Todo merge all possible links
 

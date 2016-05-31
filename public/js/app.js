@@ -143,6 +143,12 @@ var vm = new Vue({
 	        			userNotification : {},
 
 	        			userNotificationCount : 0,
+
+	        			projectFormat : 0,
+						
+						userFormat : 0,	
+			        	
+			        	dateFormat : 1,
 		        	}
 
 	},
@@ -245,7 +251,81 @@ var vm = new Vue({
     },
 
 	methods :{
+		DeleteProcedure: function(id, event){
+			event.preventDefault();
+			var r = confirm("Are you sure?");
+			if(r){
+				var data = {'id' :id };
+				this.$http.post('/api/procedure/delete/post', data , function(data){
+					if(data === 'success'){
+						this.FetchProcedures();
+					}
+				});
+			}
+		},
 
+		DeleteSkill: function(id, event){
+			
+			event.preventDefault();
+			var r = confirm("Are you sure?");
+			if(r){
+				var data = {'id' :id };
+				this.$http.post('/api/skill/delete/post', data , function(data){
+					if(data === 'success'){
+						this.FetchSkills();
+					}
+				});
+			}
+		},
+
+		DeleteProject: function(id, event){
+			event.preventDefault();
+
+			var r = confirm("Are you sure?");
+
+			if(r){
+				var data = {'id' :id };
+				this.$http.post('/api/project/delete/post', data , function(data){
+					if(data === 'success'){
+						this.FetchProjects();
+					}
+				});
+			}
+		},
+
+		DeleteUser: function(id, role , event){
+			event.preventDefault();
+			var r = confirm("Are you sure?");
+
+			if (r) {
+				var data = {'id' : id };
+				this.$http.post('/api/user/delete/post',data ,function(data){
+					if(data === 'success'){
+						if(role === 'admin'){
+							this.FetchAdmins();
+						}else if(role === 'developer'){
+							this.FetchDevelopers();
+						}else{
+							this.FetchClients();
+						}
+					}
+				});
+			}
+		},
+
+
+		DeleteCompany: function(id , event){
+			event.preventDefault();
+			var r = confirm("Are you sure?");
+
+			if (r) {
+				var data = {'id' : id };
+				this.$http.post('/api/company/delete/post', data , function(){
+					this.FetchCompanies();
+				});
+			}
+		},
+					
 		TasksPageDisabledBtn: function(){
 
 			if(this.authUser.is_admin){
@@ -414,8 +494,8 @@ var vm = new Vue({
 
 		SortReportBy : function(sortby){
 			this.sortReportBy = sortby;
-			this.QueryTimespent();	
-			this.FormatShow(sortby);		
+			this.FormatShow(sortby);	
+			this.QueryTimespent();		
 		},
 
 		FormatShow : function(format){
@@ -425,7 +505,7 @@ var vm = new Vue({
 	        	this.dateFormat = false;
 	        }else if(format == 'user'){
 	        	this.projectFormat = false;
-				this.userFormat = true;	
+				this.userFormat = 1;	
 	        	this.dateFormat = false;
 	        }else{
 	        	this.projectFormat = false;
@@ -452,7 +532,7 @@ var vm = new Vue({
 				return;
 			}
 
-			this.FormatShow(this.sortReportBy);
+			//this.FormatShow(this.sortReportBy);
 			var data= {'start_date' : this.queryTimeSpent.startDate , 'end_date' : this.queryTimeSpent.endDate ,'company_id' : this.queryTimeSpent.companyId};
 			
 			this.$http.get('/api/timespent/get?start_date='+this.DateToYMD(this.queryTimeSpent.startDate)+'&end_date='+this.DateToYMD(this.queryTimeSpent.endDate)+'&company_id='+this.queryTimeSpent.companyId+'&sort_by='+this.sortReportBy, function(data){
@@ -794,8 +874,19 @@ var vm = new Vue({
 			var value = event.target.value;
 			var updatedTask = {  'id' :id , 'field' :field , 'value' : value };
 			
+			$(".saving-"+field+"-"+id).css('display' ,'block!important');
+			$(".saving-"+field+"-"+id).html(loadingImg); 
+
+
 			this.$http.post('/api/tasks/post', updatedTask ,function(data){
-				console.log(data['response']);
+				if(data['response']['status'] == 'success'){
+					$(".saving-"+field+"-"+id).html('<i class="fa fa-check font-green"></i>');        
+	            	$(".saving-"+field+"-"+id).delay(2000).fadeIn('slow');
+	            	$(".saving-"+field+"-"+id).delay(2000).fadeOut('slow');
+	            }else{
+	            	alert('error!');
+	            }
+				
 			})
 		},
 

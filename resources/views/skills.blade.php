@@ -47,7 +47,7 @@
                                     <div class="actions">
                                         <a href="/skill/edit/@{{ skill.id }}" class="btn btn-default btn-sm">
                                             <i class="fa fa-pencil"></i> Edit </a>
-                                        <a href="/skill/delete/@{{ skill.id }}" class="btn btn-default btn-sm">
+                                        <a @click="DeleteSkill(skill.id , $event)" class="btn btn-default btn-sm">
                                             <i class="fa fa-plus"></i> Delete </a>
                                     </div>
                                 </div>

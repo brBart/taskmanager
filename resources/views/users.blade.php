@@ -47,9 +47,9 @@
                                     <div class="caption">
                                         <i class="fa fa-gift"></i>@{{ admin.first_name }} @{{ admin.last_name }} </div>
                                     <div class="actions">
-                                        <a href="/user/admin/edit/@{{ admin.id }}" class="btn btn-default btn-sm">
+                                        <a  href="/user/admin/edit/@{{ admin.id }}" class="btn btn-default btn-sm">
                                             <i class="fa fa-pencil"></i> Edit </a>
-                                        <a href="/user/admin/delete/@{{ admin.id }}" class="btn btn-default btn-sm">
+                                        <a @click="DeleteUser(admin.id, 'admin' , $event)" href="#" class="btn btn-default btn-sm">
                                             <i class="fa fa-plus"></i> Delete </a>
                                     </div>
                                 </div>
@@ -109,7 +109,7 @@
                                     <div class="actions">
                                         <a href="/user/developer/edit/@{{ developer.id }}" class="btn btn-default btn-sm">
                                             <i class="fa fa-pencil"></i> Edit </a>
-                                        <a href="/user/developer/delete/@{{ developer.id }}" class="btn btn-default btn-sm">
+                                        <a @click="DeleteUser(developer.id, 'developer' , $event)" href="#" class="btn btn-default btn-sm">
                                             <i class="fa fa-plus"></i> Delete </a>
                                     </div>
                                 </div>
@@ -169,7 +169,7 @@
                                     <div class="actions">
                                         <a href="/user/client/edit/@{{ client.id }}" class="btn btn-default btn-sm">
                                             <i class="fa fa-pencil"></i> Edit </a>
-                                        <a href="/user/client/delete/@{{ client.id }}" class="btn btn-default btn-sm">
+                                        <a href="#" @click="DeleteUser( client.id, 'client' , $event )" class="btn btn-default btn-sm">
                                             <i class="fa fa-plus"></i> Delete </a>
                                     </div>
                                 </div>
@@ -229,7 +229,7 @@
                                     <div class="actions">
                                         <a href="/company/edit/@{{ company.id }}" class="btn btn-default btn-sm">
                                             <i class="fa fa-pencil"></i> Edit </a>
-                                        <a href="/company/delete/@{{ company.id }}" class="btn btn-default btn-sm">
+                                        <a href="#" @click="DeleteCompany( company.id , $event )" class="btn btn-default btn-sm">
                                             <i class="fa fa-plus"></i> Delete </a>
                                     </div>
                                 </div>

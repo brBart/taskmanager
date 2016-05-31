@@ -27,7 +27,7 @@
                                                 <label for="form_control_1">Company</label>
                                             </div>
                                             <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" id="email" name="email" placeholder="Success state">
+                                                <input type="text" class="form-control" id="email" name="email" placeholder="">
                                                 <label for="form_control_1">Email</label>
                                             </div>
                                             <div class="form-group form-md-line-input">
@@ -77,11 +77,11 @@
                                                 <label for="form_control_1">Last name</label>                
                                             </div>
                                             <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" name="position" id="position" placeholder="Success state">
+                                                <input type="text" class="form-control" name="position" id="position" placeholder="">
                                                 <label for="form_control_1">Role</label>
                                             </div>
                                             <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Success state">
+                                                <input type="text" class="form-control" id="phone" name="phone" placeholder="">
                                                 <label for="form_control_1">Phone</label>
                                             </div>
                                             <div class="form-group form-md-line-input">

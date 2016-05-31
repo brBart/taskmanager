@@ -55,7 +55,7 @@
 
                                             </div>
                                             <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" id="email" name="email" placeholder="Success state">
+                                                <input type="text" class="form-control" id="email" name="email" placeholder="">
                                                 <label for="form_control_1">Email</label>
                                                 <div class="form_control_1 tm-saving saving-email"><img width="45" src="/assets/apps/img/tm-saving.gif"></div>
                                             </div>
@@ -97,12 +97,12 @@
                                                 <div class="form_control_1 tm-saving saving-last_name"><img width="45" src="/assets/apps/img/tm-saving.gif"></div>            
                                             </div>
                                             <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" name="position" id="position" placeholder="Success state">
+                                                <input type="text" class="form-control" name="position" id="position" placeholder="">
                                                 <label for="form_control_1">Role</label>
                                                 <div class="form_control_1 tm-saving saving-position"><img width="45" src="/assets/apps/img/tm-saving.gif"></div>
                                             </div>
                                             <div class="form-group form-md-line-input">
-                                                <input type="text" class="form-control" id="phone" name="phone" placeholder="Success state">
+                                                <input type="text" class="form-control" id="phone" name="phone" placeholder="">
                                                 <label for="form_control_1">Phone</label>
                                                 <div class="form_control_1 tm-saving saving-phone"><img width="45" src="/assets/apps/img/tm-saving.gif"></div>
                                             </div>

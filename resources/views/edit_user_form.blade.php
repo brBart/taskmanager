@@ -45,7 +45,7 @@
 
                                             </div>
                                             <div class="form-group form-md-line-input">
-                                                <input v-on:blur="SaveUserDetail('email', user.email , $event )" v-model="user.email" type="text" class="form-control" id="email" name="email" placeholder="Success state">
+                                                <input v-on:blur="SaveUserDetail('email', user.email , $event )" v-model="user.email" type="text" class="form-control" id="email" name="email" >
                                                 <label for="form_control_1">Email</label>
                                                 <div class="form_control_1 tm-saving saving-email"><img width="45" src="/assets/apps/img/tm-saving.gif"></div>
                                             </div>
@@ -61,7 +61,7 @@
 
                                             <div class="form-group form-md-line-input">
                                                  <select v-on:blur="SaveUserDetail('timezone', user.timezone , $event )" v-model="user.timezone" class="form-control" id="timezone" name="timezone">
-                                                    <option v-for="(index, item) in timezones" v-bind:value="item" >
+                                                    <option v-for="(index, timezone) in timezones" v-bind:value="timezone" value="@{{ timezone }}">
                                                         @{{ index }}
                                                     </option>
                                                 </select>
@@ -85,12 +85,12 @@
                                                 <div class="form_control_1 tm-saving saving-last_name"><img width="45" src="/assets/apps/img/tm-saving.gif"></div>            
                                             </div>
                                             <div class="form-group form-md-line-input">
-                                                <input v-on:blur="SaveUserDetail('position', user.position, $event )" type="text" class="form-control" name="position" id="position" v-model="user.position" placeholder="Success state">
+                                                <input v-on:blur="SaveUserDetail('position', user.position, $event )" type="text" class="form-control" name="position" id="position" v-model="user.position" >
                                                 <label for="form_control_1">Role</label>
                                                 <div class="form_control_1 tm-saving saving-position"><img width="45" src="/assets/apps/img/tm-saving.gif"></div>
                                             </div>
                                             <div class="form-group form-md-line-input">
-                                                <input v-on:blur="SaveUserDetail('phone' , user.phone , $event )" type="text" class="form-control" id="phone" name="phone" v-model="user.phone" placeholder="Success state">
+                                                <input v-on:blur="SaveUserDetail('phone' , user.phone , $event )" type="text" class="form-control" id="phone" name="phone" v-model="user.phone" >
                                                 <label for="form_control_1">Phone</label>
                                                 <div class="form_control_1 tm-saving saving-phone"><img width="45" src="/assets/apps/img/tm-saving.gif"></div>
                                             </div>

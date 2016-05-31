@@ -60,7 +60,7 @@
 
 		<div class="row-fluid sort-by-user" style="min-height:300px;" v-show="userFormat">
 			<div v-for="tsr in timeSpentReport">
-				<p> @{{ tsr.name }}</p>
+				<p> @{{ tsr.name }} </p>
 
 				<div v-for="timespentdetail in tsr.time_spent">
 					@{{ timespentdetail.date }} | @{{ timespentdetail.project_title }} | @{{ timespentdetail.task_title }} | @{{ timespentdetail.start_datetime }} - @{{ timespentdetail.end_datetime }} = @{{ timespentdetail.spent }}  
@@ -76,7 +76,7 @@
 
 		<div class="row-fluid sort-by-user" style="min-height:300px;" v-show="projectFormat">
 			<div v-for="tsr in timeSpentReport">
-				<p> @{{ tsr.project_name }}</p>
+				<p> @{{ tsr.project_name }} </p>
 
 				<div v-for="timespentdetail in tsr.time_spent">
 					@{{ timespentdetail.date }} | @{{ timespentdetail.task_title }} |  @{{ timespentdetail.user }}  | @{{ timespentdetail.start_datetime }} - @{{ timespentdetail.end_datetime }} = @{{ timespentdetail.spent }}  
@@ -92,7 +92,7 @@
 
 		<div class="row-fluid sort-by-user" style="min-height:300px;" v-show="dateFormat">
 			<div v-for="tsr in timeSpentReport">
-				<p> @{{ tsr.date }}</p>
+				<p> @{{ tsr.date }} </p>
 
 				<div v-for="timespentdetail in tsr.time_spent">
 					 @{{ timespentdetail.project_title }} | @{{ timespentdetail.task_title }} |  @{{ timespentdetail.user }}  | @{{ timespentdetail.start_datetime }} - @{{ timespentdetail.end_datetime }} = @{{ timespentdetail.spent }}  
@@ -111,6 +111,7 @@
 
 	</div>
 </div>
+
 
 @stop	
 

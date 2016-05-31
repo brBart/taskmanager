@@ -37,7 +37,7 @@
                                             </div>
 
                                             <div class="form-group form-md-line-input">
-                                                <input v-on:blur="SaveCompanyDetail('email', company.email , $event )" v-model="company.email" type="text" class="form-control" id="email" name="email" placeholder="Success state">
+                                                <input v-on:blur="SaveCompanyDetail('email', company.email , $event )" v-model="company.email" type="text" class="form-control" id="email" name="email" placeholder="">
                                                 <label for="form_control_1">Email</label>
                                                 <div class="form_control_1 tm-saving saving-email"></div>
                                             </div>
@@ -80,7 +80,7 @@
                                             </div>
 
                                             <div class="form-group form-md-line-input">
-                                                <input v-on:blur="SaveCompanyDetail('phone' , company.phone , $event )" type="text" class="form-control" id="phone" name="phone" v-model="company.phone" placeholder="Success state">
+                                                <input v-on:blur="SaveCompanyDetail('phone' , company.phone , $event )" type="text" class="form-control" id="phone" name="phone" v-model="company.phone" placeholder="">
                                                 <label for="form_control_1">Phone</label>
                                                 <div class="form_control_1 tm-saving saving-phone"></div>
                                             </div>

@@ -38,7 +38,7 @@
                                     <div class="actions">
                                         <a href="/procedure/edit/@{{ procedure.id }}" class="btn btn-default btn-sm">
                                             <i class="fa fa-pencil"></i> Edit </a>
-                                        <a href="/procedure/delete/@{{ procedure.id}} " class="btn btn-default btn-sm">
+                                        <a href="#" @click="DeleteProcedure(procedure.id , $event)" class="btn btn-default btn-sm">
                                             <i class="fa fa-plus"></i> Delete </a>
                                     </div>
                                 </div>

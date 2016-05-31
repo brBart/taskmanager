@@ -36,7 +36,7 @@
                                     <div class="actions">
                                         <a href="/project/edit/@{{ project.id }}" class="btn btn-default btn-sm">
                                             <i class="fa fa-pencil"></i> Edit </a>
-                                        <a href="/project/delete/@{{ project.id }}" class="btn btn-default btn-sm">
+                                        <a href="#" @click="DeleteProject(project.id , $event)" class="btn btn-default btn-sm">
                                             <i class="fa fa-plus"></i> Delete </a>
                                     </div>
                                 </div>

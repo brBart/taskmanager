@@ -551,6 +551,26 @@ class PagesController extends Controller
                         ->header('Content-Type', "application/json");
     }
 
+    public function api_company_delete_post(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+            $id = Input::get('id');
+            $company = Company::find($id);
+            $company->delete();
+
+            if($company->trashed())
+            {
+                return response()->json('success');
+            }
+            else
+            {
+                return response()->json('error');
+            }
+
+        }
+    }
+
     public function company($mode,$id)
     {
         if($mode =='viewall'){
@@ -647,7 +667,27 @@ class PagesController extends Controller
 
     /*********************************************Users****************************************************/
 
- 
+    
+
+    public function api_user_delete_post(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+            $id = Input::get('id');
+            $user = User::find($id);
+            $user->delete();
+
+            if($user->trashed())
+            {
+                return response()->json('success');
+            }
+            else
+            {
+                return response()->json('error');
+            }
+
+        }
+    }
 
     public function api_users_get($role)
     {
@@ -822,6 +862,26 @@ class PagesController extends Controller
 
 
     /***********************************************Procedures********************************************************/
+    public function api_procedure_delete_post(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+            $id = Input::get('id');
+            $procedure = Procedure::find($id);
+            $procedure->delete();
+
+            if($procedure->trashed())
+            {
+                return response()->json('success');
+            }
+            else
+            {
+                return response()->json('error');
+            }
+
+        }
+    }
+    
     public function api_procedures_get()
     {
         $procedures = DB::table('procedures')->whereNull('deleted_at')->get();
@@ -983,7 +1043,29 @@ class PagesController extends Controller
     }
 
     /***********************************************Skills**********************************************/
+    public function api_skill_delete_post(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+            $id = Input::get('id');
+            $skill = Skill::find($id);
+            $skill->delete();
 
+            if($skill->trashed())
+            {
+                return response()->json('success');
+            }
+            else
+            {
+                return response()->json('error');
+            }
+
+        }
+    }
+
+    
+
+    
     public function api_skills_get()
     {
         $skills = DB::table('skills')->whereNull('deleted_at')->get();
@@ -1097,8 +1179,33 @@ class PagesController extends Controller
     }
 
     /***********************************************Projects***********************************************************/
-     public function api_project_post(Request $request)
+    
+    
+    
+
+    public function api_project_delete_post(Request $request)
     {
+        if($request->isMethod('post'))
+        {
+            $id = Input::get('id');
+            $project = Project::find($id);
+            $project->delete();
+
+            if($project->trashed())
+            {
+                return response()->json('success');
+            }
+            else
+            {
+                return response()->json('error');
+            }
+
+        }
+    }
+
+    public function api_project_post(Request $request)
+    {
+
         if ($request->isMethod('post'))
         {   
 

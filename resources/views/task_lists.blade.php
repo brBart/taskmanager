@@ -105,7 +105,12 @@
 				right:0px;
 				position: relative;
 				top:5px;
-			} }		
+			} }	
+.tm-task-saving{
+	position: absolute;
+	top : 0px;
+	right: 0px;
+}	
 
 .tm-task-wrapper {
 	border-bottom:1px solid lightgrey;
@@ -351,6 +356,8 @@ table.mceLayout {
 				<option class="pad-5px" v-for="project in projects" v-bind:value="project.id">@{{ project.project_name }}
 				</option>
 				</select>
+
+				<div class="form_control_1 tm-task-saving saving-project_id-@{{ task.id }}"></div>  
 				</div>
 						 
 				<div class="pad-r-5px desk-full tm-project-details">						  
@@ -380,7 +387,9 @@ table.mceLayout {
 		<div class="tm-task-container desk-6-12 tab-l-8-12 mob-l-7-12 mob-p-10-12 tab-l-pad-r-15px mob-l-pad-l-5px mob-p-pad-l-0px ">   
 					  
 			<div class="tm-task-field desk-full">
-			<input id="title" name="title" type="text" v-on:blur="OnSaveTask(task.id , 'title', $event )" placeholder="Enter task" class="form-control pad-5px  tm-project-status-border-@{{task.status_id}} font-16px pad-b-5px pad-l-0px weight-normal" value="@{{ task.title }}">
+			<input id="title" name="title" type="text" v-on:blur="OnSaveTask(task.id , 'title' , $event )" placeholder="Enter task" class="form-control pad-5px  tm-project-status-border-@{{task.status_id}} font-16px pad-b-5px pad-l-0px weight-normal" value="@{{ task.title }}">
+			
+			<div class="form_control_1 tm-task-saving saving-title-@{{ task.id }}"></div>  
 			</div>
 					 
 			<div class="tm-task-title tm-project-status-@{{task.status_id}} desk-3-12 weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Task	
@@ -449,7 +458,8 @@ table.mceLayout {
 						   
 			<div class="tm-status-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Status
 			</div> 
-		
+			
+			<div class="form_control_1 tm-task-saving saving-status_id-@{{ task.id }}"></div> 
 		</div>
 
 <!--SKILL-->
@@ -465,7 +475,8 @@ table.mceLayout {
 						   
 			<div class="tm-skill-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Skill
 			</div>
-		
+			
+			<div class="form_control_1 tm-task-saving saving-skill_id-@{{ task.id }}"></div> 
 		</div>
 
 <!--PROCEDURE-->
@@ -481,7 +492,7 @@ table.mceLayout {
 		                    
 		    <div class="tm-procedure-title  desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid " style="border-width: 2px 0px 0px 0px">Procedure
 		    </div>
-		
+			<div class="form_control_1 tm-task-saving saving-procedure_id-@{{ task.id }}"></div> 
 		</div>
 
 <!--ASSIGN-->
@@ -497,7 +508,8 @@ table.mceLayout {
 		
 			<div class="tm-assign-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Assign
 			</div>
-		
+			
+			<div class="form_control_1 tm-task-saving saving-assign_user_id-@{{ task.id }}"></div> 
 		</div>
 
 					
@@ -514,6 +526,8 @@ table.mceLayout {
 				<div class="font-11px line-14px desk-5-12 tm-project-status-@{{task.status_id}}">
 				hr :
 				</div>
+
+				<div class="form_control_1 tm-task-saving saving-estimated_hours-@{{ task.id }}"></div> 
 			</div>
 		
 			<div class="desk-5-12  pad-b-2px">
@@ -523,6 +537,8 @@ table.mceLayout {
 				<div class="font-11px line-14px  desk-6-12 tm-project-status-@{{task.status_id}}">
 				min
 				</div>
+
+				<div class="form_control_1 tm-task-saving saving-estimated_minutes-@{{ task.id }}"></div> 
 			</div>
 		
 		</div>

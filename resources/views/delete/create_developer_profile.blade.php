@@ -28,7 +28,7 @@
                                                 <label for="form_control_1">Company</label>
                                             </div>
                                             <div class="form-group form-md-line-input has-success">
-                                                <input type="text" class="form-control" id="form_control_1" placeholder="Success state">
+                                                <input type="text" class="form-control" id="form_control_1" placeholder="">
                                                 <label for="form_control_1">Email</label>
                                             </div>
                                             <div class="form-group form-md-line-input has-warning">
@@ -81,7 +81,7 @@
                                                 <label for="form_control_1">Role</label>
                                             </div>
                                             <div class="form-group form-md-line-input has-success">
-                                                <input type="text" class="form-control" id="form_control_1" placeholder="Success state">
+                                                <input type="text" class="form-control" id="form_control_1" placeholder="">
                                                 <label for="form_control_1">Phone</label>
                                             </div>
                                             <div class="form-group form-md-line-input has-warning">

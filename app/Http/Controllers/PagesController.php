@@ -108,6 +108,18 @@ class PagesController extends Controller
         return $countries[$country];
     }
 
+
+    public function get_current_user_project()
+    {
+
+        $project_manage = Manager::where('user_id' , '=' , Auth::user()->id)
+                                 ->where('manager' , '=' , 1)
+                                 ->get(['project_id'])
+                                 ->toArray();
+        
+        return $project_manage;
+    }
+
     public function get_client_managed_project($user_id)
     {
         $project_manage = Manager::where('user_id' , '=' , $user_id)
@@ -1277,7 +1289,21 @@ class PagesController extends Controller
 
     public function api_projects_get()
     {
-        $projects = DB::table('projects')->whereNull('deleted_at')->get();
+        $projects = '';
+        if( Auth::user()->is_admin() )
+        {
+            $projects = Project::all();
+        }
+        else if( Auth::user()->is_developer() )
+        {
+            $projects = 0;
+        }
+        else
+        {
+            $projects = Project::whereIn('id', $this->get_current_user_project())
+                               ->get();
+        }
+
         return response()->json($projects);
     }
 
@@ -2265,6 +2291,11 @@ class PagesController extends Controller
             $value =Input::get('value');
             $timestamp = Carbon::now();
 
+            if( (Auth::user()->is_client()) && ($field == 'skill_id' || $field == 'procedure_id' || $field == 'assign_user_id' || $field == 'estimated_hours' || $field == 'estimated_minutes') )
+            {
+                return 'error';
+            }
+
             if(\Schema::hasColumn($table,$field) &&($field!="photo"))
             {
                 if($item_id > 0)
@@ -3083,9 +3114,8 @@ class PagesController extends Controller
     {
         if ($request->isMethod('get'))
         {
-            $user_id = Auth::user()->id;
             $timestamp = Carbon::now();
-            $user_last_time_read = Notification::where('user_id','=', $user_id)
+            $user_last_time_read = Notification::where('user_id','=', Auth::user()->id)
                                                ->orderby('id','desc')
                                                ->first();
             $notifications = array();
@@ -3159,6 +3189,29 @@ class PagesController extends Controller
                 }
                 else
                 {
+                    $unread_tasks = Task::with('project')
+                                        ->where('assign_user_id' , '=' , Auth::user()->id)
+                                        ->where('updated_at', '>=' , $user_last_time_read->last_time_read)
+                                        ->where('last_update_user_id', '!=',Auth::user()->id)
+                                        ->get();
+
+                    foreach($unread_tasks as $ut) 
+                    {
+
+                        $latest_comment = Comment::with('user')
+                                                 ->where('task_id' , '=' ,$ut->id)
+                                                 ->orderby('id', 'desc')
+                                                 ->first();
+
+                        $ut['comment'] = $latest_comment; 
+                        $ut['status'] = \Config::get('constants.task_status.reverse.'.$ut->status_id);
+
+                        array_push($notifications,$ut);
+                        
+                        $notification= Notification::find($user_last_time_read->id);
+                        $notification->last_time_read = $timestamp;
+                        $notification->save();
+                    }
 
                 }
 
@@ -3195,6 +3248,7 @@ class PagesController extends Controller
                                                ->first();
             $notifications = array();
 
+
             if($user_last_time_read)
             {
 
@@ -3227,17 +3281,57 @@ class PagesController extends Controller
                 else
                 {
 
+                    $notification_count = Task::where('assign_user_id' , '=' , Auth::user()->id)
+                                         ->where('updated_at', '>=' , $user_last_time_read->last_time_read)
+                                         ->where('last_update_user_id', '!=',Auth::user()->id)
+                                         ->whereIn('status_id' , \Config::get('constants.task_status.developer'))
+                                         ->count();
+
+
                 }
 
                 
-                return \Response::make(json_encode($notification_count, JSON_PRETTY_PRINT))
-                                   ->header('Content-Type', "application/json");  
-
+               
             }
             else
             {
-                return 0;
+                if(Auth::user()->is_admin())
+                {
+                    $notification_count = Task::with('project')
+                                        ->where('last_update_user_id', '!=',Auth::user()->id)
+                                        ->count();
+                    
+                }
+                elseif (Auth::user()->is_client()) 
+                {
+                    $project_manage = Manager::where('user_id' , '=' , Auth::user()->id)
+                                     ->where('manager' , '=' , 1)
+                                     ->get(['project_id'])
+                                     ->toArray();
+
+
+                    $notification_count = Task::with('project')
+                                        ->where('last_update_user_id', '!=',Auth::user()->id)
+                                        ->whereIn('project_id' , $project_manage)
+                                        ->count();
+
+                }
+                else
+                {
+
+                    $notification_count = Task::where('assign_user_id' , '=' , Auth::user()->id)
+                                         ->whereIn('status_id' , \Config::get('constants.task_status.developer'))
+                                         ->count();
+
+
+                }
             }
+
+
+
+             return \Response::make(json_encode($notification_count, JSON_PRETTY_PRINT))
+                                   ->header('Content-Type', "application/json");  
+
 
         }
 

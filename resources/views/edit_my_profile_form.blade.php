@@ -42,6 +42,9 @@
                                                 <label for="form_control_1">Email</label>
                                                 <div class="form_control_1 tm-saving saving-email"></div>
                                             </div>
+                                            
+
+                                             <?php /*
                                             <div class="form-group form-md-line-input">
                                 
                                                 <select v-on:blur="SaveUserDetail('city', user.city, $event )" class="form-control" id="city" name="city">
@@ -53,6 +56,17 @@
                                                 <label for="form_control_1">City</label>
                                                 <div class="form_control_1 tm-saving saving-city"></div>
                                             </div>
+                                                */
+                                            ?>
+
+                                            <div class="form-group form-md-line-input">
+
+                                                <input type="text" v-on:blur="SaveUserDetail('city', user.city, $event )" v-model="user.city" class="form-control large-field" name="first_name" id="first_name" placeholder="Enter your name">
+                                                <label for="form_control_1">City</label> 
+                                                <div class="form_control_1 tm-saving saving-city"></div>               
+                                            </div>
+
+
 
                                             <div class="form-group form-md-line-input">
                                                  <select v-on:blur="SaveUserDetail('timezone', user.timezone , $event )" v-model="user.timezone" class="form-control" id="timezone" name="timezone">
@@ -98,6 +112,8 @@
                                                 <label for="form_control_1">Country</label>
                                                 <div class="form_control_1 tm-saving saving-country"></div>
                                             </div>
+
+                                            @if(Auth::user()->is_admin())
                                             <div class="form-group form-md-line-input">
                                                  <select v-on:blur="SaveUserDetail('role_id', user.role_id , $event )" v-model="user.role_id" class="form-control" id="role_id" name="role_id">
                                                     <option v-for="(index, item) in roles" v-bind:value="item" >
@@ -107,6 +123,7 @@
                                                 <label for="form_control_1">Permission</label>
                                                 <div class="form_control_1 tm-saving saving-role_id"></div>
                                             </div>
+                                            @endif
                                            
                                         </div>
                                     </div>
@@ -114,7 +131,7 @@
                     </div>
                     <div class="col-md-3 col-sm-6 no-space">
                         <!-- BEGIN WIDGET SUBSCRIBE -->
-                        <div id="preview" style="background: url( {{ Auth::user()->get_photo() }} ) no-repeat" class="widget-gradient margin-top-20">
+                        <div id="preview" style="background: url( {{ Auth::user()->get_photo() }} ) no-repeat;background-position: center;" class="widget-gradient margin-top-20">
                         </div>
 
                         <input @change="UploadPhoto(user.id ,'user', 'users',$event)" name="photo" type="file" id="photo" name="photo" />
@@ -125,6 +142,7 @@
                 
                     
                 </div>
+
 
 
 @stop

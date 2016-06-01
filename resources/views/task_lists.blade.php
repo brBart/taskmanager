@@ -222,11 +222,9 @@ table.mceLayout {
 .countSeconds {font-size:7px; padding-left:3px;}
 
 .tm-assign-container-sorted{display: none;}
-
 #status_id {background-color:white !important;box-shadow:1px 1px 2px lightgrey;font-size:12px;top:-0px !important;}
-
 .sort-by-selected {color:black !important}
-   
+select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; text-indent: 1px; text-overflow: ''; }
    
     </style>
 @stop
@@ -428,18 +426,18 @@ table.mceLayout {
 
 		<div class="tm-comments-files-container desk-2-16 tab-l-2-16 tab-p-3-16 mob-l-4-16 align-center mob-l-pad-l-10px mob-p-pad-l-5px ">  <!--6-->
 					  	
-			<div class="tm-comments desk-6-12 line-20px pad-l-10px pad-t-10px"> 
+			<div class="tm-comments desk-6-12 line-20px pad-l-10px pad-t-10px"  style="padding-top:11px;"> 
 			<a href="#" class="tm-show-comments-link tm-project-status-@{{task.status_id}}" v-on:click="ShowHideComments(task.id , $event)">
-			<i class="fa fa-comments font-36px mob-p-font-24px ">
+			<i class="fa fa-comments font-28px mob-p-font-24px ">
 			</i>
 			<div class="clearfix">
 			</div> (@{{ task.comments_relation[0].count | to_int }}) 
 			</a>
 			</div>
 		
-			<div class="tm-files desk-6-12 tm-project-status-@{{task.status_id}} line-18px pad-r-10px" style="padding-top:13px;"> 
+			<div class="tm-files desk-6-12 tm-project-status-@{{task.status_id}} line-18px pad-r-5px" style="padding-top:13px;"> 
 			<a class="tm-project-status-@{{task.status_id}}" v-on:click="ShowHideMedia(task.id , $event)" href="#">
-			<i class="fa fa-cloud-upload font-36px mob-p-font-22px tm-project-status-@{{task.status_id}}"></i><br> (@{{ task.media_relation[0].count | to_int }})  
+			<i class="fa fa-cloud-upload font-28px mob-p-font-22px tm-project-status-@{{task.status_id}}"></i><br> (@{{ task.media_relation[0].count | to_int }})  
 			</a> 
 			</div>
 					
@@ -467,10 +465,11 @@ table.mceLayout {
 		<div class="tm-admin-selects-container desk-2-16 tab-l-2-16 mob-l-7-16  mob-l-pad-b-5px pad-r-10px">  <!--9-->
 					   		
 			<div class="tm-skill-field  desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'skill_id', $event )" id="skill_id" name="skill_id" class="form-control  tm-project-status-@{{task.status_id}}" v-model="task.skill_id">
+			<select v-on:blur="OnSaveTask(task.id , 'skill_id', $event )" id="skill_id" name="skill_id" class="form-control tm-skill-select tm-project-status-@{{task.status_id}}" v-model="task.skill_id">
 			<option class="pad-5px" v-for="skill in skills" v-bind:value="skill.id"> @{{ skill.name }}
 			</option> 
 			</select>
+
 			</div>
 						   
 			<div class="tm-skill-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Skill
@@ -484,7 +483,7 @@ table.mceLayout {
 		<div class="tm-procedure-container desk-2-16 tab-l-2-16 mob-l-5-16 mob-p-8-16 mob-l-pad-l-40px mob-p-pad-l-20px pad-r-10px">
 					   		
 			<div class="tm-procedure-field  desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'procedure_id', $event )" name="procedure_id" id="procedure_id" class="form-control tm-project-status-@{{task.status_id}}" v-model="task.procedure_id">
+			<select v-on:blur="OnSaveTask(task.id , 'procedure_id', $event )" name="procedure_id" id="procedure_id" class="form-control tm-procedure-select tm-project-status-@{{task.status_id}}" v-model="task.procedure_id">
 			<option   class="pad-5px" v-for="procedure in procedures" v-bind:value="procedure.id"> @{{ procedure.title }} 
 			</option>
 		    </select>
@@ -500,7 +499,7 @@ table.mceLayout {
 		<div class="tm-assign-container desk-2-16 tab-l-2-16 mob-l-4-16 mob-p-8-16 mob-l-pad-l-0px mob-p-pad-l-0px pad-r-10px">
 						   
 			<div class="tm-assign-field desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'assign_user_id', $event )" class="form-control tm-project-status-@{{task.status_id}}" id="assign_user_id" name="assign_user_id" v-model="task.assign_user_id" >
+			<select v-on:blur="OnSaveTask(task.id , 'assign_user_id', $event )" class="form-control tm-assigned-user-select tm-project-status-@{{task.status_id}}" id="assign_user_id" name="assign_user_id" v-model="task.assign_user_id" >
 			<option  class="pad-5px"  v-for="developer in developers" v-bind:value="developer.id"> @{{ developer.first_name }} @{{ developer.last_name }} 
 			</option>
 		    </select>
@@ -521,7 +520,7 @@ table.mceLayout {
 			
 			<div class="desk-7-12 pad-r-5px pad-b-2px">
 				<div class="desk-7-12">
-				<input size="1" type="text" name="estimated_hours" value="@{{ task.estimated_hours }}" v-on:blur="OnSaveTask(task.id , 'estimated_hours', $event )" id="estimated_hours" min="1" max="59" min="1" max="99" class="font-14px desk-full tm-project-status-@{{task.status_id}}">
+				<input size="1" type="text" name="estimated_hours" value="@{{ task.estimated_hours }}" v-on:blur="OnSaveTask(task.id , 'estimated_hours', $event )" id="estimated_hours" min="1" max="59" min="1" max="99" class="font-14px desk-full estimated-hours tm-project-status-@{{task.status_id}}">
 				</div>
 				<div class="font-11px line-14px desk-5-12 tm-project-status-@{{task.status_id}}">
 				hr :
@@ -532,7 +531,7 @@ table.mceLayout {
 		
 			<div class="desk-5-12  pad-b-2px">
 				<div class="desk-6-12">
-				<input size="1" type="text" name="estimated_minutes" id="estimated_minutes"  value="@{{ task.estimated_minutes }}"  v-on:blur="OnSaveTask(task.id , 'estimated_minutes', $event )" min="1" max="59" class="font-14px desk-full float-left tm-project-status-@{{task.status_id}}">
+				<input size="1" type="text" name="estimated_minutes" id="estimated_minutes"  value="@{{ task.estimated_minutes }}"  v-on:blur="OnSaveTask(task.id , 'estimated_minutes', $event )" min="1" max="59" class="font-14px desk-full float-left tm-project-status-@{{task.status_id}} estimated-minutes">
 				</div>
 				<div class="font-11px line-14px  desk-6-12 tm-project-status-@{{task.status_id}}">
 				min
@@ -894,10 +893,16 @@ table.mceLayout {
 tinymce.init({
     selector: "textarea",
     menubar: false,
-    setup: function(editor) {
-        editor.on('blur', function(e) {
-        	alert(editor.id);
-        	vm.newComment[editor.id] = tinyMCE.activeEditor.getContent(); 
+    setup : function (ed) {
+        ed.onInit.add(function (ed) {
+            tinymce.dom.Event.add(ed.getBody(), 'blur', function (e) {
+                vm.newComment[editor.id] = tinyMCE.activeEditor.getContent(); 
+            });
+
+            /* onFocus */
+           /* tinymce.dom.Event.add(ed.getBody(), 'focus', function (e) {
+                console.log('Editor with ID "' + ed.id + '" has focus.');   
+            });*/
         });
     }
 });
@@ -926,9 +931,15 @@ var mixin = {
 			this.FetchProcedures();
 			//this.FetchAuthUserCurrentTask();
 			this.FetchRoles();
+			//this.TasksPageDisabledBtn(); 
 	}
 
 }
+
+/*window.onload = function () {
+   // vm.TasksPageDisabledBtn(); 
+};
+*/
 
 @if(isset($_GET['referrer'])  && isset($_GET['task']) )
 	$(document).ready(function(){

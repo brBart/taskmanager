@@ -573,6 +573,7 @@ License: You must have a valid license purchased only from themeforest(the above
         <script src="/js/libs/vue/vue.min.js"></script>
         <script src="/js/libs/vue/vue-resource.min.js"></script>
         <!-- <script src="/js/libs/vue/vue-router.min.js"></script> -->
+        <script src="/config.json"></script>
         <script src="/js/func.js"></script>
         <!-- <script src="/js/global.js"></script> -->
         @yield('javascripts')

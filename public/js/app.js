@@ -1,18 +1,8 @@
-
 var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-var socket = io('http://192.168.33.11:3000');
+var config = JSON.parse(config);
+var socket = io(config[0].domain+':3000');
 var loadingImg = '<img width="45" src="/assets/apps/img/tm-saving.gif">';
-Vue.config.debug = true;
-/*
-Vue.component('clients-cb', {
-	props: ['clients', 'project_id'],
-
-    data: function() {
-        return {
-	    };
-    }
-});*/
 
 Vue.component('modal', {
   template: '#modal-template',
@@ -98,7 +88,7 @@ var vm = new Vue({
 
 						currentTaskId : 0,
 
-						cities : {},
+						cities : [],
 
 			            media : { 
 			            			id : '',
@@ -335,8 +325,20 @@ var vm = new Vue({
 				$('select.tm-select-project').prop('disabled', true);
 				$('.tm-skill-field select').prop('disabled', true);
 				$('.tm-procedure-field').prop('disabled', true);
+				
 			}else{
+				$('.tm-skill-field select').prop('disabled', true);
+				$('.tm-procedure-field').prop('disabled', true);
 
+				$('.tm-assigned-user-select').prop('disabled' ,true);
+				$('.estimated-hours').prop('disabled' ,true);
+				$('.estimated-minutes').prop('disabled' ,true);
+				$('.tm-procedure-select').prop('disabled', true);
+
+				$('.tm-procedure-select').addClass('convert-to-input-text');
+				$('.tm-assigned-user-select').addClass('convert-to-input-text');
+				$('.tm-skill-select').addClass('convert-to-input-text');
+								
 			}
 
 		},
@@ -839,6 +841,7 @@ var vm = new Vue({
 				}
 
 				this.FetchAuthUserCurrentTask();
+				this.TasksPageDisabledBtn();
 			});
 
 		
@@ -871,23 +874,27 @@ var vm = new Vue({
 		},
 
 		OnSaveTask: function(id, field , event){
-			var value = event.target.value;
-			var updatedTask = {  'id' :id , 'field' :field , 'value' : value };
-			
-			$(".saving-"+field+"-"+id).css('display' ,'block!important');
-			$(".saving-"+field+"-"+id).html(loadingImg); 
-
-
-			this.$http.post('/api/tasks/post', updatedTask ,function(data){
-				if(data['response']['status'] == 'success'){
-					$(".saving-"+field+"-"+id).html('<i class="fa fa-check font-green"></i>');        
-	            	$(".saving-"+field+"-"+id).delay(2000).fadeIn('slow');
-	            	$(".saving-"+field+"-"+id).delay(2000).fadeOut('slow');
-	            }else{
-	            	alert('error!');
-	            }
+		
+			if( (field === 'assign_user_id' || field === 'skill_id' || field === 'procedure_id' || field === 'estimated_hours' || field === 'estimated_minutes') && (this.authUser.is_client) ){
+				return;
+			}else{
+				var value = event.target.value;
+				var updatedTask = {  'id' :id , 'field' :field , 'value' : value };
 				
-			})
+				$(".saving-"+field+"-"+id).css('display' ,'block!important');
+				$(".saving-"+field+"-"+id).html(loadingImg); 
+
+				this.$http.post('/api/tasks/post', updatedTask ,function(data){
+					if(data['response']['status'] == 'success'){
+						$(".saving-"+field+"-"+id).html('<i class="fa fa-check font-green"></i>');        
+		            	$(".saving-"+field+"-"+id).delay(2000).fadeIn('slow');
+		            	$(".saving-"+field+"-"+id).delay(2000).fadeOut('slow');
+		            }else{
+		            	alert('error!');
+		            }
+				});
+			}
+
 		},
 
 		FetchProjects: function(){
@@ -913,8 +920,6 @@ var vm = new Vue({
 				this.$set('developers',data)
 			});
 		},
-
-
 
 		FetchClients: function(){
 			this.$http.get('/api/users/client/get',function(data){
@@ -1316,8 +1321,16 @@ var vm = new Vue({
                         		this.$http.get('/api/cities/'+value+'/get',function(data){
                         			//this.$set(this.user.city , '');
 									//this.$set('cities',{});
-									data = {'text' : 'city1' , 'text' :'city2'};
+									//data = {'text' : 'city1' , 'text' :'city2'};
+									this.$set('user.city' , '');
+									
 									this.$set('cities', data);
+
+									//$.each(data, function(i, city) {
+										//alert(city);
+				    					//this.cities.push(city);
+				    				//});
+									//this.$set('cities', data);
 									//this.cities.push('');
 								});
                         	}

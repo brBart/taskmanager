@@ -1966,7 +1966,7 @@ class PagesController extends Controller
                 $higher_task_ordering = $higher_task->ordering;
 
                 $new_task = new Task;
-                $new_task->title = 'new task '+($highest_order+1);
+                $new_task->title = 'NEW TASK - ID '.($highest_order+1);
                 $new_task->ordering =  $highest_order + 1;
                 $new_task->created_by_user_id = Auth::user()->id;
                 $new_task->save();
@@ -1975,8 +1975,8 @@ class PagesController extends Controller
             }
             else
             {
-                $new_task = new Task;
-                $new_task->title = 'New task 1';
+                $new_task = new Task();
+                $new_task->title = 'NEW TASK - ID 1';
                 $new_task->ordering =  1;
                 $new_task->created_by_user_id = Auth::user()->id;
                 $new_task->save();
@@ -1996,8 +1996,7 @@ class PagesController extends Controller
         if(Auth::user()->is_admin() )
         {
             if($sort_by  == 'project' )
-            {  
-                //$tasks = array();
+            {   
                 $pids = array();
                 $task_project_ids = Task::groupby('project_id')
                                         ->get(['project_id']);
@@ -2277,6 +2276,15 @@ class PagesController extends Controller
         }
     }
 
+
+    public function api_task_post_v2(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+            
+        }
+    }
+
     
 
     public function api_tasks_post(Request $request)
@@ -2325,7 +2333,9 @@ class PagesController extends Controller
                                 );
 
                         $task = Task::find($item_id);
-                        event(new TaskEvent('reorder'));
+                        $task['sender_user_id'] = Auth::user()->id;
+
+                        event(new TaskEvent($task , Auth::user()->id));
                         return response()->json(['response' => $res]);
                     }
                     else

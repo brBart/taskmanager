@@ -110,6 +110,7 @@
 	position: absolute;
 	top : 0px;
 	right: 0px;
+	width: 24px;
 }	
 
 .tm-task-wrapper {
@@ -350,7 +351,7 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 			<div class="tm-project-container tm-filter-by-date-selected desk-10-12 pad-r-15px mob-l-pad-r-0px mob-p-pad-r-10px">				
 			
 				<div class="tm-project-field desk-full">	
-				<select v-model="task.project_id" v-on:blur="OnSaveTask(task.id , 'project_id', $event )" name="project_id" id="project_id" class="form-control tm-project-status-border-@{{task.status_id}} font-18px pad-b-1px pad-l-0px weight-light tm-select-project" >					
+				<select v-model="task.project_id" v-on:enter="GetOlderValue(task.project_id)" v-on:change="OnSaveTask(task.id , 'project_id', $event )" name="project_id" id="project_id" class="form-control tm-project-status-border-@{{task.status_id}} font-18px pad-b-1px pad-l-0px weight-light tm-select-project" >					
 				<option class="pad-5px" v-for="project in projects" v-bind:value="project.id">@{{ project.project_name }}
 				</option>
 				</select>
@@ -360,7 +361,7 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 						 
 				<div class="pad-r-5px desk-full tm-project-details">						  
 				
-					<div class="tm-project-title tm-project-status-@{{task.status_id}} desk-3-12 weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Project
+					<div class="tm-project-title tm-project-status-@{{task.status_id}} desk-3-12 weight-normal font-12px pad-t-1px tm-task-caption-project_id-@{{ task.id }}  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Project
 					</div>
 						 
 					<div class="tm-due-date font-11px desk-9-12 align-right  tm-project-status-border-@{{task.status_id}} border-1px border-solid pad-t-2px" style="border-width: 2px 0px 0px 0px"><span class="weight-normal">Task due:</span><span> Feb 24th </span><span class="mob-l-hide mob-p-show">@ 11:30am</span>
@@ -385,12 +386,12 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 		<div class="tm-task-container desk-6-12 tab-l-8-12 mob-l-7-12 mob-p-10-12 tab-l-pad-r-15px mob-l-pad-l-5px mob-p-pad-l-0px ">   
 					  
 			<div class="tm-task-field desk-full">
-			<input id="title" name="title" type="text" v-on:blur="OnSaveTask(task.id , 'title' , $event )" placeholder="Enter task" class="form-control pad-5px  tm-project-status-border-@{{task.status_id}} font-16px pad-b-5px pad-l-0px weight-normal" value="@{{ task.title }}">
+			<input id="title" name="title" type="text" v-on:focus="GetOlderValue(task.title)" v-on:keyup="OnSaveTask(task.id , 'title' , $event )" placeholder="Enter task" class="form-control pad-5px  tm-project-status-border-@{{task.status_id}} font-16px pad-b-5px pad-l-0px weight-normal" value="@{{ task.title }}">
 			
 			<div class="form_control_1 tm-task-saving saving-title-@{{ task.id }}"></div>  
 			</div>
 					 
-			<div class="tm-task-title tm-project-status-@{{task.status_id}} desk-3-12 weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Task	
+			<div class="tm-task-title tm-task-caption-title-@{{ task.id }} tm-project-status-@{{task.status_id}} desk-3-12 weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Task	
 			</div>
 					  
 			<div class="tm-add-new-task desk-9-12 align-right pad-0px pad-r-5px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">
@@ -448,13 +449,13 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 		<div class="tm-status-container desk-2-16 tab-l-2-16 mob-l-5-16 mob-l-pad-b-5px pad-r-10px">  
 						 
 			<div class="tm-status-field desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'status_id', $event )" v-model="task.status_id" class="weight-bold font-14px form-control tm-project-status-@{{task.status_id}}" name="status_id" id="status_id">
+			<select  v-on:enter="GetOlderValue(task.status_id)" v-on:change="OnSaveTask(task.id , 'status_id', $event )" v-model="task.status_id" class="weight-bold font-14px form-control tm-project-status-@{{task.status_id}}" name="status_id" id="status_id">
 			<option class="pad-5px tm-project-status-@{{value}}" v-for="(key , value) in statuses" v-bind:value="value"> @{{ key }} 
 			</option> 
 			</select>
 			</div>
 						   
-			<div class="tm-status-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Status
+			<div class="tm-status-title desk-15-16 tm-task-caption-status_id-@{{ task.id }} tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Status
 			</div> 
 			
 			<div class="form_control_1 tm-task-saving saving-status_id-@{{ task.id }}"></div> 
@@ -465,14 +466,14 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 		<div class="tm-admin-selects-container desk-2-16 tab-l-2-16 mob-l-7-16  mob-l-pad-b-5px pad-r-10px">  <!--9-->
 					   		
 			<div class="tm-skill-field  desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'skill_id', $event )" id="skill_id" name="skill_id" class="form-control tm-skill-select tm-project-status-@{{task.status_id}}" v-model="task.skill_id">
+			<select  v-on:enter="GetOlderValue(task.skill_id)" v-on:change="OnSaveTask(task.id , 'skill_id', $event )" id="skill_id" name="skill_id" class="form-control  tm-skill-select tm-project-status-@{{task.status_id}}" v-model="task.skill_id">
 			<option class="pad-5px" v-for="skill in skills" v-bind:value="skill.id"> @{{ skill.name }}
 			</option> 
 			</select>
 
 			</div>
 						   
-			<div class="tm-skill-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Skill
+			<div class="tm-skill-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-task-caption-skill_id-@{{ task.id }}  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Skill
 			</div>
 			
 			<div class="form_control_1 tm-task-saving saving-skill_id-@{{ task.id }}"></div> 
@@ -483,13 +484,13 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 		<div class="tm-procedure-container desk-2-16 tab-l-2-16 mob-l-5-16 mob-p-8-16 mob-l-pad-l-40px mob-p-pad-l-20px pad-r-10px">
 					   		
 			<div class="tm-procedure-field  desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'procedure_id', $event )" name="procedure_id" id="procedure_id" class="form-control tm-procedure-select tm-project-status-@{{task.status_id}}" v-model="task.procedure_id">
+			<select  v-on:enter="GetOlderValue(task.procedure_id)" v-on:change="OnSaveTask(task.id , 'procedure_id', $event )" name="procedure_id" id="procedure_id" class="form-control tm-procedure-select tm-project-status-@{{task.status_id}}" v-model="task.procedure_id">
 			<option   class="pad-5px" v-for="procedure in procedures" v-bind:value="procedure.id"> @{{ procedure.title }} 
 			</option>
 		    </select>
 		    </div>
 		                    
-		    <div class="tm-procedure-title  desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid " style="border-width: 2px 0px 0px 0px">Procedure
+		    <div class="tm-procedure-title  desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px  tm-task-caption-procedure_id-@{{ task.id }} border-solid " style="border-width: 2px 0px 0px 0px">Procedure
 		    </div>
 			<div class="form_control_1 tm-task-saving saving-procedure_id-@{{ task.id }}"></div> 
 		</div>
@@ -499,13 +500,13 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 		<div class="tm-assign-container desk-2-16 tab-l-2-16 mob-l-4-16 mob-p-8-16 mob-l-pad-l-0px mob-p-pad-l-0px pad-r-10px">
 						   
 			<div class="tm-assign-field desk-full">
-			<select v-on:blur="OnSaveTask(task.id , 'assign_user_id', $event )" class="form-control tm-assigned-user-select tm-project-status-@{{task.status_id}}" id="assign_user_id" name="assign_user_id" v-model="task.assign_user_id" >
+			<select  v-on:focus="GetOlderValue(task.assign_user_id)" v-on:change="OnSaveTask((task.id , 'assign_user_id', $event )" class="form-control tm-assigned-user-select tm-project-status-@{{task.status_id}}" id="assign_user_id" name="assign_user_id" v-model="task.assign_user_id" >
 			<option  class="pad-5px"  v-for="developer in developers" v-bind:value="developer.id"> @{{ developer.first_name }} @{{ developer.last_name }} 
 			</option>
 		    </select>
 			</div>
 		
-			<div class="tm-assign-title desk-15-16 tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Assign
+			<div class="tm-assign-title desk-15-16 tm-project-status-@{{task.status_id}}  tm-task-caption-assign_user_id-@{{ task.id }} desk-full weight-normal font-12px pad-t-1px  tm-project-status-border-@{{task.status_id}} border-1px border-solid" style="border-width: 2px 0px 0px 0px">Assign
 			</div>
 			
 			<div class="form_control_1 tm-task-saving saving-assign_user_id-@{{ task.id }}"></div> 
@@ -520,7 +521,7 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 			
 			<div class="desk-7-12 pad-r-5px pad-b-2px">
 				<div class="desk-7-12">
-				<input size="1" type="text" name="estimated_hours" value="@{{ task.estimated_hours }}" v-on:blur="OnSaveTask(task.id , 'estimated_hours', $event )" id="estimated_hours" min="1" max="59" min="1" max="99" class="font-14px desk-full estimated-hours tm-project-status-@{{task.status_id}}">
+				<input size="1" type="text" name="estimated_hours" value="@{{ task.estimated_hours }}"  v-on:focus="GetOlderValue(task.estimated_hours)" v-on:keyup="OnSaveTask(task.id , 'estimated_hours', $event )" id="estimated_hours" min="1" max="59" min="1" max="99" class="font-14px desk-full estimated-hours tm-project-status-@{{task.status_id}}">
 				</div>
 				<div class="font-11px line-14px desk-5-12 tm-project-status-@{{task.status_id}}">
 				hr :
@@ -531,7 +532,7 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 		
 			<div class="desk-5-12  pad-b-2px">
 				<div class="desk-6-12">
-				<input size="1" type="text" name="estimated_minutes" id="estimated_minutes"  value="@{{ task.estimated_minutes }}"  v-on:blur="OnSaveTask(task.id , 'estimated_minutes', $event )" min="1" max="59" class="font-14px desk-full float-left tm-project-status-@{{task.status_id}} estimated-minutes">
+				<input size="1" type="text" name="estimated_minutes" id="estimated_minutes"  value="@{{ task.estimated_minutes }}"   v-on:focus="GetOlderValue(task.estimated_minutes)" v-on:keyup="OnSaveTask(task.id , 'estimated_minutes', $event )" min="1" max="59" class="font-14px desk-full float-left tm-project-status-@{{task.status_id}} estimated-minutes">
 				</div>
 				<div class="font-11px line-14px  desk-6-12 tm-project-status-@{{task.status_id}}">
 				min
@@ -543,7 +544,7 @@ select.convert-to-input-text { -webkit-appearance: none; -moz-appearance: none; 
 		</div>
 						
 				
-			<div class="tm-estimate-hrs-field tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px tm-project-status-border-@{{task.status_id}} border-t-2px border-solid border-r-none border-b-none border-l-none tm-project-status-@{{task.status_id}}" >Estimate			
+			<div class="tm-estimate-hrs-field tm-task-caption-estimated_minutes-@{{ task.id }} tm-task-caption-estimated_hours-@{{ task.id }} tm-project-status-@{{task.status_id}} desk-full weight-normal font-12px pad-t-1px tm-project-status-border-@{{task.status_id}} border-t-2px border-solid border-r-none border-b-none border-l-none tm-project-status-@{{task.status_id}}" >Estimate			
 			</div>
 			
 		</div>

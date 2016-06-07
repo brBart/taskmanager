@@ -2,7 +2,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
 
 var config = JSON.parse(config);
 var socket = io(config[0].domain+':3000');
-var loadingImg = '<img width="45" src="/assets/apps/img/tm-saving.gif">';
+var loadingImg = '<img width="20" src="/assets/apps/img/tm-saving.gif">';
 
 Vue.component('modal', {
   template: '#modal-template',
@@ -139,6 +139,10 @@ var vm = new Vue({
 						userFormat : 0,	
 			        	
 			        	dateFormat : 1,
+
+			        	timer : 0,
+
+						olderValue : '',
 		        	}
 
 	},
@@ -241,6 +245,72 @@ var vm = new Vue({
     },
 
 	methods :{
+		OnSaveTaskDetail: function(id, field,  event){
+			if( (field === 'assign_user_id' || field === 'skill_id' || field === 'procedure_id' || field === 'estimated_hours' || field === 'estimated_minutes') && (this.authUser.is_client) ){
+				return;
+			}else{
+				clearTimeout(this.timer); 
+		    	this.timer = setTimeout(function() { 
+					var value = event.target.value;
+					var updatedTask = {  'id' :id , 'field' :field , 'value' : value };	
+					$(".saving-"+field+"-"+id).css('display' ,'block!important');
+					$(".saving-"+field+"-"+id).html(loadingImg); 
+					vm.$http.post('/api/tasks/post', updatedTask ,function(data){
+						if(data['response']['status'] == 'success'){
+							$(".saving-"+field+"-"+id).html('<i class="fa fa-check font-green"></i>');        
+			            	$(".saving-"+field+"-"+id).delay(2000).fadeIn('slow');
+			            	$(".saving-"+field+"-"+id).delay(2000).fadeOut('slow');
+			            }else{
+			            	alert('error!');
+			            }
+					});
+				}, 2000);	
+
+			}
+		    
+		},
+
+		GetOlderValue: function(val){
+			vm.olderValue = val;
+		},
+
+		OnSaveTask: function(id, field , event){
+			alert('hello');	
+			clearTimeout(this.timer); 
+	    	this.timer = setTimeout(function() { 
+	    		var captionClass = '.tm-task-caption-'+field+'-'+id;
+	    		var caption = $(captionClass).html();
+	    		alert(event.target.value);
+	    		var value = (typeof event.target.value === 'undefined') ? '' : event.target.value;
+
+			
+				if(vm.olderValue != value ){
+					vm.olderValue = '';
+
+					if( (field === 'assign_user_id' || field === 'skill_id' || field === 'procedure_id' || field === 'estimated_hours' || field === 'estimated_minutes') && (vm.authUser.is_client == 1 ) ){	
+						return;
+					}else{
+						var updatedTask = {  'id' :id , 'field' :field , 'value' : value };	
+						$(captionClass).delay(50000).fadeIn('slow').html(loadingImg);
+						vm.$http.post('/api/tasks/post', updatedTask ,function(data){
+							if(data['response']['status'] == 'success'){
+				            	$(captionClass).delay(10000).fadeIn('slow').html('Saved <i class="fa fa-check font-green"></i>').fadeOut('slow').delay(3000);
+				            	setTimeout(function() { 
+				            		$(captionClass).html(caption);
+				            	}, 1000);
+				            }else{
+				            	alert('error!');
+				            }
+						});
+
+					}
+				}
+			}, 2000);	
+
+		
+
+		},
+
 		DeleteProcedure: function(id, event){
 			event.preventDefault();
 			var r = confirm("Are you sure?");
@@ -869,30 +939,6 @@ var vm = new Vue({
 				});
 
 
-			}
-
-		},
-
-		OnSaveTask: function(id, field , event){
-		
-			if( (field === 'assign_user_id' || field === 'skill_id' || field === 'procedure_id' || field === 'estimated_hours' || field === 'estimated_minutes') && (this.authUser.is_client) ){
-				return;
-			}else{
-				var value = event.target.value;
-				var updatedTask = {  'id' :id , 'field' :field , 'value' : value };
-				
-				$(".saving-"+field+"-"+id).css('display' ,'block!important');
-				$(".saving-"+field+"-"+id).html(loadingImg); 
-
-				this.$http.post('/api/tasks/post', updatedTask ,function(data){
-					if(data['response']['status'] == 'success'){
-						$(".saving-"+field+"-"+id).html('<i class="fa fa-check font-green"></i>');        
-		            	$(".saving-"+field+"-"+id).delay(2000).fadeIn('slow');
-		            	$(".saving-"+field+"-"+id).delay(2000).fadeOut('slow');
-		            }else{
-		            	alert('error!');
-		            }
-				});
 			}
 
 		},
@@ -1669,20 +1715,29 @@ socket.on("notification-channel:App\\Events\\NotificationEvent", function(messag
  	    vm.FetchUserNotificationCount();
  });
 
- socket.on("task-channel:App\\Events\\TaskEvent", function(message){
- 	    //TODO : fetch only the newly created task, then insert
- 	    
- 	   /* for(var i = 0; i < myArray.length; i++) {
-		   if(myArray[i].color === 'blue') {
-		     return i;
-		   }
+socket.on("task-channel:App\\Events\\TaskEvent", function(message){
+	    //TODO : fetch only the newly created task, then insert
+	    //if(message.data['data']['sender_user_id'] != vm.authUser.id){
+ 	    var updatedTask = message.data.data;
+    	$.each(vm.tasks, function() {
+			if(this.id == updatedTask['id']){
+				this.title = updatedTask['title'];
+				this.project_id = updatedTask['project_id'];
+				this.status_id = updatedTask['status_id'];
+				this.skill_id = updatedTask['skill_id'];
+				this.procedure_id = updatedTask['procedure_id'];
+				this.assign_user_id = updatedTask['assign_user_id'];
+				this.estimated_hours = updatedTask['estimated_hours'];
+				this.estimated_minutes = updatedTask['estimated_minutes'];
+				return false;
+			}						
+		});
+	//}
+
+	    if(vm.authUser['role_id'] == vm.roles['developer']){
+	    //	vm.FetchAuthUserCurrentTask();
 		}
-		*/
- 	    vm.FetchTasks();
- 	    if(vm.authUser['role_id'] == vm.roles['developer']){
- 	    //	vm.FetchAuthUserCurrentTask();
- 		}
- });
+});
 
 socket.on("task-timer-channel:App\\Events\\StartEndTaskTimerEvent", function(message){
  	var task_id = message.data['task_id'];
@@ -1713,7 +1768,6 @@ socket.on("task-timer-channel:App\\Events\\StartEndTaskTimerEvent", function(mes
 if(vm.authUser.role == 'admin' || vm.authUser.role == 'client'){
 	$('#main').sortable({
 		handle: '.handle',
-
 		start: function(evt, ui){
 			tinymce.execCommand('mceRemoveControl', true, "#1" );
 			tinymce.execCommand('mceRemoveControl', true, "#2" );
@@ -1747,10 +1801,3 @@ if(vm.authUser.role == 'admin' || vm.authUser.role == 'client'){
 		}
 	});
 }
-
-
-
-
-
-
-//# sourceMappingURL=tasks.js.map
